@@ -7,7 +7,7 @@ type RectangleProps = {
 };
 
 const Rectangle: React.FC<RectangleProps> = ({ width = "w-32", height = "h-16", color = "bg-blue-500" }) => {
-  return <div className={`${width} ${height} ${color}`}></div>;
+  return <div className={`${width} ${height} ${color}`}>rectangle</div>;
 };
 
 export default Rectangle;
