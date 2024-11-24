@@ -1,4 +1,5 @@
 import React from "react";
+import LoginButton from "./LoginButton";
 
 const Links: React.FC = () => {
     return (
@@ -6,6 +7,7 @@ const Links: React.FC = () => {
             <div><a href="/parking">Find Parking</a></div>
             <div><a href="/orders">My Orders</a></div>
             <div><a href="/account">My Account</a></div>
+            <div><LoginButton label = "Register" /></div>
         </div>
     );
 };
