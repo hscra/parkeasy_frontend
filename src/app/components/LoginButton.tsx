@@ -20,7 +20,7 @@ const LoginButton: React.FC<LoginButtonProps> = ({
   const router = useRouter();
 
   const handleClick = () => {
-    router.push('/signin');
+    router.push('/signup');
   };
 
   return (
