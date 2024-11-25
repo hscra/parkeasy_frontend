@@ -9,12 +9,14 @@ import Link from '@mui/material/Link';
 const Login: React.FC = () => {
   return (
     <div id="home" className="flex justify-center align-center">
-      <Card sx={{ minWidth: 275, minHeight: 200, padding: 2 }}>
+      <Card sx={{ minWidth: 150, minHeight: 200, padding: 2 }}>
       <CardContent>
       <Typography gutterBottom sx={{ color: 'text.primary', fontSize: 24}} align="justify">Welcome Back!</Typography>
       <Typography gutterBottom sx={{ color: 'text.secondary', fontSize: 20}} align="justify">Sign In</Typography>
-          <TextField sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2}} id="email" label="Email" variant="outlined" type="email"/>
-          <TextField sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2}}id="password" label="Password" variant="outlined" type="password" />
+          <TextField sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 57}} id="email" label="Email" variant="outlined" type="email"/>
+          <br/>
+          <TextField sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 57}} id="password" label="Password" variant="outlined" type="password"/>
+          <br/>
           <Typography sx={{ color: 'text.secondary', fontSize: 12}} align="justify"><a href="/login">Don't have an account yet?</a> <Link href="/signup">Register Now!</Link></Typography>
       </CardContent>
       <CardActions>
