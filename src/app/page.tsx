@@ -8,7 +8,7 @@ import Button from '@mui/joy/Button';
 
 const HomePage: React.FC = () => {
   return (
-    <Card variant="soft">
+    <Card variant="soft" sx={{ width: 500, height: 500}} >
         <CardContent>
           <Typography level="title-md">Soft card</Typography>
           <Typography>Description of the card.</Typography>
