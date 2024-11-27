@@ -28,15 +28,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
-      <Providers>
         <Header />
           <main id="main" className="w-[100%] h-[100%] flex justify-center items-center">
             <AppRouterCacheProvider>
               {children}
             </AppRouterCacheProvider>
           </main>
-        </Providers>
       </body> 
     </html>
   );
