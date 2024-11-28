@@ -6,17 +6,15 @@ import Typography from '@mui/joy/Typography';
 import Link from '@mui/joy/Link';
 import Button from '@mui/joy/Button';
 
+
+
 const HomePage: React.FC = () => {
   return (
-    <Card variant="soft" sx={{ width: 500, height: 500}} >
-        <CardContent>
-          <Typography level="title-md">Soft card</Typography>
-          <Typography>Description of the card.</Typography>
-        </CardContent>
-        <CardActions>
-          <Button>Click me</Button>
-        </CardActions>
+    <div>
+      <Card className = "card" variant="soft" sx={{ width: 500, height: 500}} size = 'lg'>
       </Card>
+    </div>
+    
   );
 };
 
