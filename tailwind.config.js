@@ -1,6 +1,7 @@
 // tailwind.config.js
 import {nextui} from "@nextui-org/react";
 
+
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   mode: 'jit',
@@ -27,4 +28,6 @@ const config = {
   plugins: [nextui()]
 }
 
+
 export default config;
+

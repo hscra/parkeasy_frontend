@@ -10,11 +10,10 @@ import Button from '@mui/joy/Button';
 
 const HomePage: React.FC = () => {
   return (
-    <div>
-      <Card className = "card" variant="soft" sx={{ width: 500, height: 500}} size = 'lg'>
+    <div className="w-[1775px] h-[825px]">
+      <Card variant="soft" sx={{ width: 1000, height: 940}} size = 'lg'>
       </Card>
     </div>
-    
   );
 };
 
