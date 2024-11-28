@@ -1,37 +1,38 @@
 'use client';
 import React from "react";
-import { TextField, Button, Box } from "@mui/material";
-import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
-import CardContent from '@mui/material/CardContent';
-import Typography from '@mui/material/Typography';
-import Link from '@mui/material/Link';
+import { TextField, Button, Input } from "@mui/joy";
+import Card from '@mui/joy/Card';
+import CardActions from '@mui/joy/CardActions';
+import CardContent from '@mui/joy/CardContent';
+import Typography from '@mui/joy/Typography';
+import Link from '@mui/joy/Link';
 import Image from 'next/image';
 import Logo from '../../public/logo.jpg';
+import PasswordMeterInput from "@/app/components/Password";
+import EmailFormProp from "@/app/components/Email";
 
 
 const Register: React.FC = () => {
   return (
     <div id="home" className="flex justify-center align-center">
-      <Card sx={{ minWidth: 275, minHeight: 200, padding: 2 }}>
-      <CardContent>
-      <Image src={Logo} alt="Logo" width={50} height={50} />
-      <Typography gutterBottom sx={{ color: 'text.primary', fontSize: 20}} align="justify">ParkEasy</Typography>
-      <Typography gutterBottom sx={{ color: 'text.secondary', fontSize: 20}} align="justify">Sign Up</Typography>
-      <br/>
-          <TextField sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 57}} id="username" label="Username" variant="outlined" type="username"/>
-          <br/>
-          <TextField sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 57}} id="email" label="Email" variant="outlined" type="email"/>
-          <br/>
-          <TextField sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 57}}id="password" label="Password" variant="outlined" type="password" />
-          <br/>
-          <Typography sx={{ color: 'text.secondary', fontSize: 12}} align="justify"><a href="/login">Already have an account?</a> <Link href="/signin">Log In!</Link></Typography>
-      </CardContent>
-      <CardActions>
-          <Button variant="contained" color="primary">
+      <Card variant="outlined" color="primary" sx={{ minWidth: 275, minHeight: 200, padding: 2 }}>
+        <CardContent>
+          <Image src={Logo} alt="Logo" width={50} height={50} />
+          <Typography gutterBottom sx={{ color: 'text.primary', fontSize: 20, textAlign: "justify"}}>ParkEasy</Typography>
+          <Typography gutterBottom sx={{ color: 'text.secondary', fontSize:20, textAlign: "justify"}}>Sign Up</Typography>
+
+          {/* <Input color="neutral" placeholder="email" variant="soft"/> */}
+
+          <EmailFormProp />
+          {/* <TextField sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 57}} id="email" label="Email" variant="outlined" type="email"/> */}
+
+          <Typography sx={{ color: 'text.secondary', fontSize: 12, textAlign: "justify"}} ><a href="/login">Already have an account?</a> <Link href="/signin">Log In!</Link></Typography>
+        </CardContent>
+        {/* <CardActions>
+          <Button variant="outlined" color="primary" type = "submit">
             Sign Up
           </Button>
-      </CardActions>
+        </CardActions> */}
       </Card>
     </div>
   );

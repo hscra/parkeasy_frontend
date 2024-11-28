@@ -9,7 +9,7 @@ import Link from '@mui/material/Link';
 const Login: React.FC = () => {
   return (
     <div id="home" className="flex justify-center align-center">
-      <Card variant="outlined" sx={{ minWidth: 150, minHeight: 200, padding: 2 }}>
+      <Card variant="outlined" color = "primary" sx={{ minWidth: 150, minHeight: 200, padding: 2 }}>
       <CardContent>
       <Typography gutterBottom sx={{ color: 'text.primary', fontSize: 24, textAlign: 'justify' }}>Welcome Back!</Typography>
       <Typography gutterBottom sx={{ color: 'text.secondary', fontSize: 20, textAlign: 'justify' }} component="div">Sign In</Typography>
