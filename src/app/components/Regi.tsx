@@ -14,10 +14,11 @@ export default function EmailFormProp() {
         alert(JSON.stringify(formJson));
       }}
     >
-    <Stack spacing={1}>
-        <Input placeholder="Email" required />
+    <Stack spacing={1.5}>
+        <Input type="username" placeholder="Username" required />
+        <Input type="email" placeholder="Email" required />
         <PasswordMeterInput/>
-        <Button type="submit">Submit</Button>
+        <Button type="submit">Join</Button>
     </Stack>
     </form>
   );

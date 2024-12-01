@@ -9,7 +9,7 @@ import Link from '@mui/joy/Link';
 import Image from 'next/image';
 import Logo from '../../public/logo.jpg';
 import PasswordMeterInput from "@/app/components/Password";
-import EmailFormProp from "@/app/components/Email";
+import EmailFormProp from "@/app/components/Regi";
 
 
 const Register: React.FC = () => {
