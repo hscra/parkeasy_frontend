@@ -11,10 +11,8 @@ import CardLayout from "./home/page";
 
 const HomePage: React.FC = () => {
   return (
-    <div className="w-[1775px] h-[825px]">
+    <div className="w-full min-h-screen">
       <CardLayout />
-      {/* <Card variant="soft" sx={{ width: 1000, height: 940}} size = 'lg'>
-      </Card> */}
     </div>
   );
 };
