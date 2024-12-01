@@ -6,6 +6,7 @@ import Typography from '@mui/joy/Typography';
 import Link from '@mui/joy/Link';
 import Button from '@mui/joy/Button';
 import CardLayout from "./home/page";
+import Header from "./components/Logo";
 
 
 
