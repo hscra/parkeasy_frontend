@@ -11,19 +11,15 @@ const Logi: React.FC = () => {
     const formData = new FormData(event.currentTarget);
     const formJson = Object.fromEntries((formData as FormData).entries());
 
-    console.log(formJson)
-
     fetch("http://localhost:8080/member/login", {
       method: 'POST',
       headers: {
-        "Access-Control-Allow-Origin": "http://localhost:3000",
         "Content-Type": "application/json",
       },
       body: JSON.stringify(formJson),
-      // credentials: 'include'
+      credentials: 'include'
     })
       .then(response => {
-        console.log(response)
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
