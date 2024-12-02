@@ -2,9 +2,13 @@ import * as React from 'react';
 import Button from '@mui/joy/Button';
 import Input from '@mui/joy/Input';
 import Stack from '@mui/joy/Stack';
-import PasswordMeterInput from './Password';
+import Password from './Password';
+import { useState } from 'react';
 
-export default function EmailFormProp() {
+const Regi: React.FC = () => {
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+
   return (
     <form
       onSubmit={(event) => {
@@ -14,12 +18,14 @@ export default function EmailFormProp() {
         alert(JSON.stringify(formJson));
       }}
     >
-    <Stack spacing={1.5}>
+      <Stack spacing={1.5}>
         <Input type="username" placeholder="Username" required />
         <Input type="email" placeholder="Email" required />
-        <PasswordMeterInput/>
+        <Password />
         <Button type="submit">Join</Button>
-    </Stack>
+      </Stack>
     </form>
   );
 }
+
+export default Regi;
