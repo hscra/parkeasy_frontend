@@ -5,7 +5,7 @@ import LinearProgress from '@mui/joy/LinearProgress';
 import Typography from '@mui/joy/Typography';
 import Key from '@mui/icons-material/Key';
 
-export default function PasswordMeterInput() {
+const Password: React.FC = () => {
   const [value, setValue] = React.useState('');
   const minLength = 12;
   return (
@@ -35,3 +35,5 @@ export default function PasswordMeterInput() {
     </Stack>
   );
 }
+
+export default Password;

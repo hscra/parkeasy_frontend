@@ -8,8 +8,6 @@ import Button from '@mui/joy/Button';
 import CardLayout from "./home/page";
 import Header from "./components/Logo";
 
-
-
 const HomePage: React.FC = () => {
   return (
     <div className="w-full min-h-screen">
