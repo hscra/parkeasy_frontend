@@ -1,7 +1,6 @@
 import React from "react";
 import Logo from "./Logo";
 import Links from "./Links";
-import Link from "next/link";
 
 const Header: React.FC = () => {
     return (
