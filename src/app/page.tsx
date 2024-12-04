@@ -2,8 +2,16 @@ import React from "react";
 
 const HomePage: React.FC = () => {
   return (
-    <div id="home" className="flex justify-center align-center">
-      <div>Home sweet home :D</div>
+    <div className="w-full min-h-screen">
+      <div className="pt-[150px] min-h-screen bg-gray-50">
+        <div className="grid gap-6 p-6">
+          <div className="bg-gray-200 h-[700px] rounded-lg"></div>
+          <div className="grid grid-cols-3 gap-6">
+            <div className="col-span-2 bg-gray-200 h-[500px] rounded-lg"></div>
+            <div className="col-span-1 bg-gray-200 h-[500px] rounded-lg"></div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
