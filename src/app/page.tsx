@@ -49,9 +49,9 @@ const Home: React.FC = () => {
 
   return (
     <div className="w-full min-h-screen">
-      <div className="pt-[150px] min-h-screen bg-gray-50">
-        <div className="grid gap-6 p-6">
-          <div className="bg-gray-200 h-[700px] rounded-lg">
+      <div className=" min-h-screen bg-gray-50">
+        <div className="mt-[150px] grid gap-6 p-6">
+          <div className="bg-gray-200 mt-[150px] h-[700px] rounded-lg">
             <Map locations={locations} />
           </div>
           <div className="grid grid-cols-3 gap-6">
