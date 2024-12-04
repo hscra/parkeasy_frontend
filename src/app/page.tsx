@@ -48,13 +48,19 @@ const Home: React.FC = () => {
   }, [])
 
   return (
-    <main className="sm:container">
-      <div className="min-h-full">
-        <div className="mx-auto max-w-7xl py-6 sm:px-6 lg:px-8">
-          <Map locations={locations} />
+    <div className="w-full min-h-screen">
+      <div className="pt-[150px] min-h-screen bg-gray-50">
+        <div className="grid gap-6 p-6">
+          <div className="bg-gray-200 h-[700px] rounded-lg">
+            <Map locations={locations} />
+          </div>
+          <div className="grid grid-cols-3 gap-6">
+            <div className="col-span-2 bg-gray-200 h-[500px] rounded-lg"></div>
+            <div className="col-span-1 bg-gray-200 h-[500px] rounded-lg"></div>
+          </div>
         </div>
       </div>
-    </main>
+    </div>
   );
 }
 
