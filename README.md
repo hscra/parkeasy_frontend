@@ -1,36 +1,84 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+This is a branch of master `park-easy-frontend` to implement fetch buildings' location from back-end Spring bott.
 
-## Getting Started
+## Procedure
 
-First, run the development server:
+It is necessary to implement back-end service in advance to simulate the marking buindlings locations.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+Also, the lattitude and logitude information will be required to register the location entity.
+
+Therefore, it can be refer to implement the back end service and then `[Next.js]` will be followed.
+
+1.  The endpoint: GET [http://localhost:8080/map/locations](http://localhost:8080/map/locations)
+
+2.  Add `LocationController` class
+
+```Java
+@RestController
+@RequestMapping("/api")
+public class LocationController {
+    @Autowired
+    private LocationRepository locationRepository;
+    @GetMapping("/locations")
+    public List<LocationEntity> getLocations(){
+        return locationRepository.findAll();
+    }
+}
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+3. Add `LocationEntity` class
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+It assumes that the MySQL shema already incorporated on the server.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```java
+@Entity
+@Setter
+@Getter
+@Table(name = "locations")
+public class LocationEntity {
 
-## Learn More
+    @Id
+    private int id_locations;
 
-To learn more about Next.js, take a look at the following resources:
+    @Column
+    private double lat;
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+    @Column
+    private double lng;
+}
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+4. Add `Repository` interface
 
-## Deploy on Vercel
+```java
+public interface LocationRepository extends JpaRepository<LocationEntity, Long> {
+}
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+5. MySQL schema
+   The table should contain the information to matching the `LocationEntity`
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+6. Configure `WebConfig` class
+
+```java
+@Configuration
+public class WebConfig implements WebMvcConfigurer {
+    @Override
+    public void addCorsMappings(CorsRegistry registry){
+        registry.addMapping("/map/**")
+                .allowedOrigins("http://localhost:3000")
+                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                .allowedHeaders("*")
+                .allowCredentials(true);
+
+    }
+}
+```
+
+7. Implement `Map.tsx` in `Next.js`
+
+- Prerequisites
+  Add dependencies `google-map-api` and `mysql` in `package.json`
+
+- Refer to `map.tsx` file in the repository. `getLocation()` method will hepl you to fetch data from Spring.
+
+- Add `<Map>` in `page.tsx` to render
