@@ -1,14 +1,10 @@
-This is a branch of master `park-easy-frontend` to implement fetch buildings' location from back-end Spring bott.
+This is a branch of master `park-easy-frontend` to implement displays parking information (current status and price).
 
 ## Procedure
 
-It is necessary to implement back-end service in advance to simulate the marking buindlings locations.
+Uwaga!! For backend parts below, it is intended for testing purpose for frontend implementation only, not for entire implementation.
 
-Also, the lattitude and logitude information will be required to register the location entity.
-
-Therefore, it can be refer to implement the back end service and then `[Next.js]` will be followed.
-
-1.  The endpoint: GET [http://localhost:8080/map/locations](http://localhost:8080/map/locations)
+1.  The endpoint: GET [http://localhost:8080/api/locations/${id}/getdetails]
 
 2.  Add `LocationController` class
 
@@ -17,68 +13,132 @@ Therefore, it can be refer to implement the back end service and then `[Next.js]
 @RequestMapping("/api")
 public class LocationController {
     @Autowired
-    private LocationRepository locationRepository;
-    @GetMapping("/locations")
-    public List<LocationEntity> getLocations(){
-        return locationRepository.findAll();
+    private LocationService locationService;
+    @Autowired
+    private ParkingSpaceDetailService parkingSpaceDetailService;
+
+    public LocationController (LocationService locationService){
+        this.locationService = locationService;
     }
+
+    @GetMapping("/locations")
+    public List<LocationEntity> getAllLocations() {
+        return locationService.getAllLocations();
+    }
+
+    @GetMapping("/locations/{id}/getdetails")
+    public List<ParkingSpaceDetailDTO> getLocationDetails(@PathVariable Long id) {
+        System.out.println("Fetched details: " + parkingSpaceDetailService.getParkingSpaceDetailsByLocationId(id)); // Debugging line
+        return parkingSpaceDetailService.getParkingSpaceDetailsByLocationId(id);
+
+    }
+
 }
 ```
 
-3. Add `LocationEntity` class
-
-It assumes that the MySQL shema already incorporated on the server.
+3. Add `ParkingSpacesDetailEntity` class
 
 ```java
 @Entity
-@Setter
 @Getter
-@Table(name = "locations")
-public class LocationEntity {
-
+@Setter
+@Table(name = "getdetails")
+public class ParkingSpaceDetailEntity {
     @Id
-    private int id_locations;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @Column
-    private double lat;
+    private String status; // Example: "occupied" or "available"
 
     @Column
-    private double lng;
+    private double price;
+
+    @ManyToOne
+    @JoinColumn(name ="id_locations", referencedColumnName = "id")
+    private LocationEntity locationEntity;
+
+
+    public LocationEntity getIdLocations() {
+        return locationEntity;
+    }
+    public static ParkingSpaceDetailEntity toParkingSpaceDetailEntity(ParkingSpaceDetailDTO parkingSpaceDetailDTO){
+        ParkingSpaceDetailEntity parkingSpaceDetailEntity = new ParkingSpaceDetailEntity();
+        parkingSpaceDetailEntity.setId(parkingSpaceDetailDTO.getId());
+        parkingSpaceDetailEntity.setStatus(parkingSpaceDetailDTO.getStatus());
+        parkingSpaceDetailEntity.setPrice(parkingSpaceDetailDTO.getPrice());
+        parkingSpaceDetailEntity.setLocationEntity(parkingSpaceDetailDTO.getId_locations());
+        return parkingSpaceDetailEntity;
+    }
+
 }
 ```
 
 4. Add `Repository` interface
 
 ```java
-public interface LocationRepository extends JpaRepository<LocationEntity, Long> {
+@Repository
+public interface GetDetailsRepository extends JpaRepository<ParkingSpaceDetailEntity, Long> {
+    List<ParkingSpaceDetailEntity> findByLocationEntityId(Long locationId);
 }
 ```
 
-5. MySQL schema
-   The table should contain the information to matching the `LocationEntity`
-
-6. Configure `WebConfig` class
+5. Add `ParkingSpaceDetailDTO` class
 
 ```java
-@Configuration
-public class WebConfig implements WebMvcConfigurer {
-    @Override
-    public void addCorsMappings(CorsRegistry registry){
-        registry.addMapping("/map/**")
-                .allowedOrigins("http://localhost:3000")
-                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
-                .allowedHeaders("*")
-                .allowCredentials(true);
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@ToString
+public class ParkingSpaceDetailDTO {
+    private Long id;
+    private String status;
+    private double price;
+    private LocationEntity id_locations;
 
+    public static ParkingSpaceDetailDTO toParkingSpaceDetailDTO(ParkingSpaceDetailEntity parkingSpaceEntity) {
+        ParkingSpaceDetailDTO parkingSpaceDetailDTO = new ParkingSpaceDetailDTO();
+        parkingSpaceDetailDTO.setId(parkingSpaceEntity.getId());
+        parkingSpaceDetailDTO.setStatus(parkingSpaceEntity.getStatus());
+        parkingSpaceDetailDTO.setPrice(parkingSpaceEntity.getPrice());
+        parkingSpaceDetailDTO.setId_locations(parkingSpaceEntity.getIdLocations());
+        return parkingSpaceDetailDTO;
     }
+}
+
+```
+
+6. Add `ParkingSapceDetailService` class
+
+```java
+@Service
+@RequiredArgsConstructor
+public class ParkingSpaceDetailService {
+    @Autowired
+    private GetDetailsRepository getDetailsRepository;
+    public ParkingSpaceDetailService(GetDetailsRepository getDetailsRepository) {
+        this.getDetailsRepository = getDetailsRepository;
+    }
+
+    public List<ParkingSpaceDetailDTO> getParkingSpaceDetailsByLocationId(Long locationId){
+        List<ParkingSpaceDetailEntity> parkingSpaceDetailEntity = getDetailsRepository.findByLocationEntityId(locationId);
+        return parkingSpaceDetailEntity.stream()
+                .map(ParkingSpaceDetailDTO::toParkingSpaceDetailDTO)
+                .collect(Collectors.toList());
+//        return ParkingSpaceDetailDTO.toParkingSpaceDetailDTO(parkingSpaceDetailEntity);
+    }
+
 }
 ```
 
-7. Implement `Map.tsx` in `Next.js`
+7. Implement `Map.tsx` , `ParkingSpace.tsx` and `Detail.tsx` components
 
-- Prerequisites
+- Prerequisites :
   Add dependencies `google-map-api` and `mysql` in `package.json`
 
-- Refer to `map.tsx` file in the repository. `getLocation()` method will hepl you to fetch data from Spring.
+- Refer to `map.tsx` file in the repository. `getLocation()` method will help you to fetch data from Spring.
+- `fetchLocationDetails()` will fetch the details data such as status and prices.
 
+- `ParkingSpace` and `Detail` components are seperately involed to rendering as props.
 - Add `<Map>` in `page.tsx` to render
