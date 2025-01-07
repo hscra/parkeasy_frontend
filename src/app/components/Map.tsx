@@ -1,23 +1,19 @@
 "use client";
 
-import React, { MutableRefObject, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Location } from "../page";
 import { Loader } from "@googlemaps/js-api-loader";
-import Detail, { ParkingDetailsProps } from "../components/Detail";
 
 type MapProps = {
-  locations: Location[];
+  locations: Location[]
+  selectLocation: (cityId: number) => void
 };
 
-const Map: React.FC<MapProps> = ({ locations }) => {
-  const markersRef = React.useRef<google.maps.marker.AdvancedMarkerElement[]>(
-    []
-  );
+const Map: React.FC<MapProps> = ({ locations, selectLocation }) => {
+  const markersRef = React.useRef<google.maps.marker.AdvancedMarkerElement[]>([]);
   const mapRef = React.useRef<HTMLDivElement | null>(null);
   const mapInstanceRef = React.useRef<google.maps.Map | null>(null);
   const [mapReady, setMapReady] = useState<boolean>(false);
-  const [details, setDetails] = useState<ParkingDetailsProps[]>([]); // transfer details to Detail.tsx componet
-  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const initMap = async () => {
@@ -45,81 +41,7 @@ const Map: React.FC<MapProps> = ({ locations }) => {
         mapOptions
       );
 
-      // getLocations (latitude and logitude for marking on map)
-      async function getLocation() {
-        const apiUrl = "http://localhost:8080/api/locations";
-        try {
-          const response = await fetch(apiUrl, {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            credentials: "include",
-          });
-
-          if (!response.ok) {
-            throw new Error("Network response was not ok : ${response.status}");
-          }
-
-          const locations = await response.json();
-          // console.log("Fetched locations : ", locations);  // for debugging
-
-          const locationIds = locations.map(
-            (location: { id: number }) => location.id
-          );
-          const detailsData = await fetchLocationDetails(locationIds);
-          // console.log("Fetched location details:", detailsData); // for debugging
-
-          const flattendDetails = detailsData.flat();
-          setDetails(flattendDetails); // flatten the data array
-
-          locations.forEach(
-            (location: { lat: number; lng: number }) =>
-              new AdvancedMarkerElement({
-                map: Map,
-                position: {
-                  lat: location.lat,
-                  lng: location.lng,
-                },
-              })
-          );
-        } catch (error: any) {
-          console.error("Error to fetching location data", error);
-        }
-      }
-
-      async function fetchLocationDetails(
-        ids: number[]
-      ): Promise<ParkingDetailsProps[]> {
-        try {
-          const detailPromises = ids.map(async (id) => {
-            const response = await fetch(
-              `http://localhost:8080/api/locations/${id}/getdetails`,
-              {
-                method: "GET",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-                credentials: "include",
-              }
-            );
-            if (!response.ok) {
-              throw new Error(
-                `Failed to fetch details for location ${id}: ${response.statusText}`
-              );
-            }
-            const rawData = await response.json();
-            return rawData;
-          });
-          return Promise.all(detailPromises);
-        } catch (err: any) {
-          setError(err.message || "Failed to fetch location details");
-          return [];
-        }
-      }
-
       setMapReady(true);
-      getLocation();
     };
 
     initMap();
@@ -138,30 +60,16 @@ const Map: React.FC<MapProps> = ({ locations }) => {
         map: mapInstanceRef.current,
         position: location.position,
       });
+      google.maps.event.addListener(markerElement, "click", () => {
+        selectLocation(location.id)
+      })
       return markerElement;
     });
   }, [locations, mapReady]);
 
-  // to update details asynchronously.
-  useEffect(() => {
-    console.log("Updated details:", details);
-  }, [details]);
-
-  // return <div id="map" style={{ height: "600px" }} ref={mapRef}></div>;
   return (
     <>
       <div style={{ height: "600px" }} ref={mapRef}></div>
-      <div>
-        {details.map((detail, index) => (
-          <Detail
-            key={index}
-            id={detail.id}
-            id_locations={detail.id_locations}
-            status={detail.status}
-            price={detail.price}
-          />
-        ))}
-      </div>
     </>
   );
 };

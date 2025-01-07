@@ -1,7 +1,9 @@
 "use client";
 
+import Detail from "./components/Detail";
 import Map from "./components/Map";
 import React, { useEffect, useState } from "react";
+import ParkingSpace from "./components/ParkingSpace";
 
 export type Location = {
   id: number,
@@ -14,7 +16,8 @@ export type Position = {
 }
 
 const Home: React.FC = () => {
-  const [locations, setLocations] = useState([])
+  const [locations, setLocations] = useState<Location[]>([])
+  const [selectedLocation, setSelectedLocation] = useState<number>(0);
 
   const getLocations = async () => {
     const apiUrl = "http://localhost:8080/location/getAllLocations";
@@ -52,11 +55,15 @@ const Home: React.FC = () => {
       <div className=" min-h-screen bg-gray-50">
         <div className="mt-[150px] grid gap-6 p-6">
           <div className="bg-gray-200 mt-[150px] h-[700px] rounded-lg">
-            <Map locations={locations} />
+            <Map locations={locations} selectLocation={setSelectedLocation}/>
           </div>
           <div className="grid grid-cols-3 gap-6">
-            <div className="col-span-2 bg-gray-200 h-[500px] rounded-lg"></div>
-            <div className="col-span-1 bg-gray-200 h-[500px] rounded-lg"></div>
+            <div className="col-span-2 bg-gray-200 h-[500px] rounded-lg">
+              <Detail id_location={selectedLocation}/>
+            </div>
+            <div className="col-span-1 bg-gray-200 h-[500px] rounded-lg">
+              <ParkingSpace />
+            </div>
           </div>
         </div>
       </div>

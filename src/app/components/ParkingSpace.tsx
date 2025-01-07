@@ -6,17 +6,14 @@ export type ParkingSpaceProps = {
   lng: number;
 };
 
-const ParkingSpace: React.FC<ParkingSpaceProps> = ({
-  id_locations,
-  lat,
-  lng,
-}) => {
+const ParkingSpace: React.FC = () => {
   return (
     // <div className={`parking-space ${statusStyle} p-4 border rounded`}>
     <div>
-      <h4>Parking Space ID : {id_locations}</h4>
+      elo żelo
+      {/* <h4>Parking Space ID : {id_locations}</h4>
       <p>{lat}</p>
-      <p>{lng}</p>
+      <p>{lng}</p> */}
     </div>
   );
 };
