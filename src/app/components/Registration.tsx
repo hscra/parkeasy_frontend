@@ -5,7 +5,7 @@ import Stack from '@mui/joy/Stack';
 import Password from './Password';
 import { useState } from 'react';
 
-const Regi: React.FC = () => {
+const Registration: React.FC = () => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
 
@@ -28,4 +28,4 @@ const Regi: React.FC = () => {
   );
 }
 
-export default Regi;
+export default Registration;

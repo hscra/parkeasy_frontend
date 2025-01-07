@@ -27,7 +27,6 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }>) {
   return (
-    // <div>{children}</div>
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         <Header />
