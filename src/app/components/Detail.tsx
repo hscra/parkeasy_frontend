@@ -1,19 +1,20 @@
 import React, { useEffect } from "react";
 import Table from '@mui/joy/Table';
-import Typography from '@mui/joy/Typography';
 import Sheet from '@mui/joy/Sheet';
+import DetailParkingSpaceRow from "./DetailParkingSpaceRow";
 
 export type ParkingDetailsProps = {
   id_location: number;
+  selectSpace: (id: number) => void;
 };
-export type ParkingSpace = {
+export type ParkingSpaceDataItem = {
   id: number;
   city_id: number;
   availability: boolean;
 }
 
-const Detail: React.FC<ParkingDetailsProps> = ({id_location}) => {
-  const [parkingSpaces, setParkingSpaces] = React.useState<ParkingSpace[]>([])
+const Detail: React.FC<ParkingDetailsProps> = ({id_location, selectSpace}) => {
+  const [parkingSpaces, setParkingSpaces] = React.useState<ParkingSpaceDataItem[]>([])
 
   const fetchParkingSpaces = async () => {
     if (id_location === 0) return;
@@ -35,7 +36,7 @@ const Detail: React.FC<ParkingDetailsProps> = ({id_location}) => {
           id: el.id,
           city_id: el.city_Id,
           availability: el.availability,
-        } as ParkingSpace
+        } as ParkingSpaceDataItem
       }))
     } catch (error) {
       console.error("Error to fetching location data", error);
@@ -66,11 +67,12 @@ const Detail: React.FC<ParkingDetailsProps> = ({id_location}) => {
           </thead>
           <tbody>
             {parkingSpaces.map((ps) => (
-              <tr key={ps.id}>
-                <td>{ps.id}</td>
-                <td>{ps.city_id}</td>
-                <td>{(ps.availability).toString()}</td>
-              </tr>
+              <DetailParkingSpaceRow
+                key={ps.id}
+                id={ps.id}
+                city_id={ps.city_id}
+                availability={ps.availability}
+              />
             ))}
           </tbody>
         </Table>

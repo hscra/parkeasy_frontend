@@ -1,11 +1,5 @@
 import React from "react";
 
-export type ParkingSpaceProps = {
-  id_locations: number;
-  lat: number;
-  lng: number;
-};
-
 const ParkingSpace: React.FC = () => {
   return (
     // <div className={`parking-space ${statusStyle} p-4 border rounded`}>
