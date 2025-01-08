@@ -29,7 +29,6 @@ const Detail: React.FC<ParkingDetailsProps> = ({id_location, selectSpace}) => {
         throw new Error("Network response was not ok");
       }
       const data = await response.json();
-      console.log(data)
 
       setParkingSpaces(data.map((el: any) => {
         return {
@@ -72,6 +71,7 @@ const Detail: React.FC<ParkingDetailsProps> = ({id_location, selectSpace}) => {
                 id={ps.id}
                 city_id={ps.city_id}
                 availability={ps.availability}
+                onClick={() => selectSpace(ps.id)}
               />
             ))}
           </tbody>
