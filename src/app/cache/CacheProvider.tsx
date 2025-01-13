@@ -10,10 +10,23 @@ const CacheContext = createContext<LoggedInType | undefined>(undefined);
 
 export function CacheProvider({ children }: { children: ReactNode }) {
   const [loggedIn, setLoggedIn] = useState<boolean>(false);
+  useEffect(() => {
+    fetch(process.env.SERVER_DOMAIN + "/member/currentUser", {
+        method: 'GET',
+        headers: { "Content-Type": "application/json" },
+        credentials: 'include'
+      })
+        .then(async (response) => {
+          setLoggedIn(await response.text() !== "")
+        }
+      ).catch((error) => {
+        console.log('Login check error!', error);
+      })
+  }, [])
 
-  useEffect(()=>{
-    console.log(`Cache used. loggedIn: ${loggedIn}`);
-  }, [loggedIn]);
+//   useEffect(()=>{
+//     console.log(`Cache used. loggedIn: ${loggedIn}`);
+//   }, [loggedIn]);
 
   return (
     <CacheContext.Provider value={{ loggedIn, setLoggedIn }}>
