@@ -21,7 +21,7 @@ const Home: React.FC = () => {
   const [selectedSpace, setSelectedSpace] = useState<number>(0)
 
   const getLocations = async () => {
-    const apiUrl = "http://localhost:8080/location/getAllLocations";
+    const apiUrl = process.env.SERVER_DOMAIN + "/location/getAllLocations";
     try {
       const response = await fetch(apiUrl, {
         method: "GET",

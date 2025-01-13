@@ -19,7 +19,7 @@ const Detail: React.FC<ParkingDetailsProps> = ({id_location, selectSpace}) => {
   const fetchParkingSpaces = async () => {
     if (id_location === 0) return;
 
-    const apiUrl = "http://localhost:8080/parking/getAllInCity?Id=" + id_location;
+    const apiUrl = process.env.SERVER_DOMAIN + "/parking/getAllInCity?Id=" + id_location;
     try {
       const response = await fetch(apiUrl, {
         method: "GET",
