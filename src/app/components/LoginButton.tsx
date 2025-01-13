@@ -9,6 +9,7 @@ interface LoginButtonProps {
   variant?: 'text' | 'outlined' | 'contained';
   color?: 'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning';
   disabled?: boolean;
+  route: '/signup' | '/signin' | "/signout";
 }
 
 const LoginButton: React.FC<LoginButtonProps> = ({
@@ -16,11 +17,12 @@ const LoginButton: React.FC<LoginButtonProps> = ({
   variant = 'contained',
   color = 'primary',
   disabled = false,
+  route
 }) => {
   const router = useRouter();
 
   const handleClick = () => {
-    router.push('/signup');
+    router.push(route);
   };
 
   return (

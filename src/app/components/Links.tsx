@@ -7,7 +7,9 @@ const Links: React.FC = () => {
             <div><a href="/orders">My Orders</a></div>
             <div><a href="/parking">Find Parking</a></div>
             <div><a href="/account">My Account</a></div>
-            <div><LoginButton label = "Register" /></div>
+            <LoginButton label="Register" route="/signup"/>
+            <LoginButton label="Login" route="/signin"/>
+            <LoginButton label="Logout" route="/signout"/>
         </div>
     );
 };
