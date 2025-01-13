@@ -1,10 +1,9 @@
 "use client";
-
 import { createContext, useContext, useState, ReactNode, useEffect } from "react";
 
 export type LoggedInType = {
     loggedIn: boolean;
-    setLoggedIn: (loggedIn: boolean) => void;
+    setLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const CacheContext = createContext<LoggedInType | undefined>(undefined);

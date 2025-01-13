@@ -3,8 +3,10 @@ import Button from '@mui/joy/Button';
 import Input from '@mui/joy/Input';
 import Stack from '@mui/joy/Stack';
 import { useRouter } from "next/navigation";
+import { useCache } from '../cache/CacheProvider';
 
 const Login: React.FC = () => {
+  const { setLoggedIn } = useCache();
   const router = useRouter();
 
   React.useEffect(() => {
@@ -42,10 +44,11 @@ const Login: React.FC = () => {
       body: JSON.stringify(formJson),
       credentials: 'include'
     })
-      .then(response => {
+      .then(async response => {
         if (!response.ok) {
           return response.text().then(text => { throw new Error(text) })
         }
+        setLoggedIn(true)
         router.push("/")
       })
       .catch((error) => {

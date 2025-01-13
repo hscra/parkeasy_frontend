@@ -2,9 +2,11 @@ import * as React from 'react';
 import Button from '@mui/joy/Button';
 import Stack from '@mui/joy/Stack';
 import { useRouter } from "next/navigation";
+import { useCache } from '../cache/CacheProvider';
 
 const Login: React.FC = () => {
   const router = useRouter();
+  const { loggedIn, setLoggedIn } = useCache();
 
   React.useEffect(() => {
     fetch(process.env.SERVER_DOMAIN + "/member/currentUser", {
@@ -18,7 +20,6 @@ const Login: React.FC = () => {
         let text = await response.text()
 
         if (text === "") {
-          console.log("User not logged in!");
           router.push("/");
         }
       }
@@ -41,7 +42,7 @@ const Login: React.FC = () => {
         if (!response.ok) {
           return response.text().then(text => { throw new Error(text) })
         }
-        console.log("User successfully logged out!")
+        setLoggedIn(false)
         router.push("/")
       })
       .catch((error) => {
