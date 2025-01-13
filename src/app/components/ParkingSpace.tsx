@@ -20,19 +20,36 @@ const ParkingSpace: React.FC<ParkingSpaceProps> = ({space}) => {
     password: null
   });
 
-  const makeRegistration = async () => {
-    let body = JSON.stringify({
-      userId: user.id,
-      parkingSpaceId: space
-    })
-    console.log(body)
+  const reservationRequestValid = () => {
+    let message = null;
 
+    if (user.id === 0) {
+      message = "User not logged in!";
+    } else if (space === 0) {
+      message = "Space not chosen!";
+    }
+
+    return message
+  }
+
+  const makeReservation = async () => {
+    // Validate prerequisites
+    const message = reservationRequestValid()
+    if (message) {
+      alert(message)
+      return;
+    }
+
+    // Operate further
     fetch(process.env.SERVER_DOMAIN + "/reservation/create", {
       method: 'POST',
       headers: {
         "Content-Type": "application/json",
       },
-      body: body,
+      body: JSON.stringify({
+        userId: user.id,
+        parkingSpaceId: space
+      }),
       credentials: 'include'
     })
       .then(async response => {
@@ -43,12 +60,14 @@ const ParkingSpace: React.FC<ParkingSpaceProps> = ({space}) => {
             console.log("Success!");
             break;
           case 409:
-            alert(`Data conflict! Message: [${await response.text()}]`)
+            alert(`Data conflict! (${code}) [${await response.text()}]`)
             break;
           case 500:
-            throw new Error(`Server error! (${code}) [${await response.text()}]`);
+            alert(`Server error! (${code}) [${await response.text()}]`)
+            break;
           default:
-            throw new Error(`Unknown response code: (${code}) [${await response.text()}]`)
+            alert(`Unknown response code! (${code}) [${await response.text()}]`)
+            break;
         }
       })
       .catch((error) => {
@@ -80,8 +99,8 @@ const ParkingSpace: React.FC<ParkingSpaceProps> = ({space}) => {
   return (
     <>
       {space}<br />
-      {JSON.stringify(user)}
-      <Button onClick={makeRegistration}>Confirm</Button>
+      {JSON.stringify(user)}<br />
+      <Button onClick={makeReservation}>Confirm</Button>
     </>
   );
 };
