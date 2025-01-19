@@ -14,7 +14,7 @@ export type Position = {
 }
 
 const Home: React.FC = () => {
-  const [locations, setLocations] = useState([])
+  const [locations, setLocations] = useState<Location[]>([])
 
   const getLocations = async () => {
     const apiUrl = "http://localhost:8080/location/getAllLocations";
@@ -48,16 +48,16 @@ const Home: React.FC = () => {
   }, [])
 
   return (
-    <div className="w-full min-h-screen">
-      <div className=" min-h-screen bg-gray-50">
-        <div className="mt-[150px] grid gap-6 p-6">
-          <div className="bg-gray-200 mt-[150px] h-[700px] rounded-lg">
+    <div className="w-full min-h-screen bg-gray-50 pt-[150px]">
+      <div className="grid gap-6 p-6">
+        <div className="bg-gray-200 h-[700px] rounded-lg flex justify-center items-center relative z-0">
+          <div className="w-full h-full rounder-lg">
             <Map locations={locations} />
           </div>
-          <div className="grid grid-cols-3 gap-6">
-            <div className="col-span-2 bg-gray-200 h-[500px] rounded-lg"></div>
-            <div className="col-span-1 bg-gray-200 h-[500px] rounded-lg"></div>
-          </div>
+        </div>
+        <div className="grid grid-cols-3 gap-6">
+          <div className="col-span-2 bg-gray-200 h-[650px] rounded-lg"></div>
+          <div className="col-span-1 bg-gray-200 h-[650px] rounded-lg"></div>
         </div>
       </div>
     </div>

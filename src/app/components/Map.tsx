@@ -1,6 +1,6 @@
 "use client";
 
-import React, { MutableRefObject, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Location } from "../page";
 import { Loader } from "@googlemaps/js-api-loader";
 
@@ -60,7 +60,7 @@ const Map: React.FC<MapProps> = ({ locations }) => {
   }, [locations, mapReady]);
 
   return (
-    <div id="map" style={{ height: "600px" }} ref={mapRef}></div>
+    <div id="map" style={{ width: "100%", height: "100%", position: "relative", zIndex: 0 }} ref={mapRef}></div>
   );
 }
 
