@@ -85,9 +85,9 @@ const Orders: React.FC = () => {
   };
 
   return (
-    <div className="w-full min-h-screen bg-gray-50">
+    <div className="w-full min-h-screen">
       {/* Grey Background Section - Full Height */}
-      <div className="w-full bg-gray-100 py-8 rounded-lg min-h-screen flex flex-col justify-center">
+      <div className="w-full  py-8 rounded-lg min-h-screen flex flex-col justify-center">
         {/* Reservation Section with wider backdrop */}
         <div className="w-full px-8 md:px-16 xl:px-32 py-8 rounded-lg">
           <div className="w-full max-w-full p-8 grid grid-cols-1 md:grid-cols-2 gap-8">
