@@ -30,7 +30,7 @@ const Orders: React.FC = () => {
       console.log(res);
 
       if (!res.ok) {
-        router.push("/login");
+        router.push("/signin");
         return;
       }
 
@@ -53,7 +53,7 @@ const Orders: React.FC = () => {
 
       try {
         const response = await fetch(
-          "http://localhost:8080/reservation/getAll",
+          process.env.SERVER_DOMAIN + "/reservation/getAll",
           {
             method: "GET",
             credentials: "include", // Include session cookies
