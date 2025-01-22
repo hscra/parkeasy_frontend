@@ -6,7 +6,7 @@ import Typography from '@mui/joy/Typography';
 import Link from '@mui/joy/Link';
 import Image from 'next/image';
 import Logo from '../../public/logo.jpg';
-import Logi from "@/app/components/Logi";
+import Login from "@/app/components/Login";
 
 const Signin: React.FC = () => {
   return (
@@ -16,7 +16,7 @@ const Signin: React.FC = () => {
           <Image src={Logo} alt="Logo" width={50} height={50} />
           <Typography gutterBottom sx={{ color: 'text.primary', fontSize: 20, textAlign: "justify" }}>ParkEasy</Typography>
           <Typography gutterBottom sx={{ color: 'text.secondary', fontSize: 20, textAlign: "justify" }}>Sign In</Typography>
-          <Logi />
+          <Login />
           <Typography sx={{ color: 'text.secondary', fontSize: 12, textAlign: "justify" }} ><a href="/login">Don't have an account yet?</a> <Link href="/signup">Register Now!</Link></Typography>
         </CardContent>
       </Card>
