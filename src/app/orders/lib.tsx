@@ -31,7 +31,7 @@ export async function login({
   memberPassword: string;
 }) {
   // Verify credentials && get the user
-  const response = await fetch("http://localhost:8080/member/login", {
+  const response = await fetch(process.env.SERVER_DOMAIN + "/member/login", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     credentials: "include", // Include cookies for session
