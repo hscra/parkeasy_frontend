@@ -85,7 +85,7 @@ const Orders: React.FC = () => {
   };
 
   return (
-    <div className="w-full min-h-screen flex flex-col justify-start pt-[50px]">
+    <div className="w-full h-full flex flex-col justify-start pt-[50px]">
       <div className="w-full py-4 px-8 rounded-lg flex flex-col justify-center">
         <div className="w-full max-w-full p-4 grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="flex flex-col">
