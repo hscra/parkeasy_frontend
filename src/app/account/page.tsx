@@ -9,7 +9,7 @@ const Account: React.FC = () => {
   const user = {
     username: "JohnDoe123",
     email: "johndoe@example.com",
-    points: 100 
+    points: 999 
   };
 
 
@@ -26,7 +26,7 @@ const Account: React.FC = () => {
   let progress = 0;
 
 
-  if (user.points <= 0) {
+  if (user.points = 0) {
     progress;
   }
   else if (currentTier.name === "Bronze") {
@@ -57,10 +57,8 @@ const Account: React.FC = () => {
   const handleModalClose = () => setOpenModal(false);
 
   return (
-    <div id="account" className="w-full" style={{ paddingTop: `${navbarHeight}px` }}>
-      {/* Account Overview Section */}
+    <div id="account" className="pt-[150px]" style={{ paddingTop: `${navbarHeight}px` }}>
       <div className="flex flex-col items-center">
-        {/* Main Account Overview Card */}
         <div className="w-full max-w-4xl bg-gray-200 p-12 rounded-lg shadow-md mb-6">
           <Typography variant="h3" fontWeight="bold" className="mb-4" marginBottom={2}>
             Account Overview
