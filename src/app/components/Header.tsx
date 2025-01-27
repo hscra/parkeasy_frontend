@@ -6,29 +6,19 @@ import CssBaseline from '@mui/material/CssBaseline';
 import useScrollTrigger from '@mui/material/useScrollTrigger';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
-import Links from './Links'; // Ensure the file exists
-import Logo from './Logo';  // Ensure the file exists
+import Links from './Links';
+import Logo from './Logo';  
+import { ThemeProvider, createTheme } from '@mui/material/styles';
 
 interface Props {
-  /**
-   * Injected by the documentation to work in an iframe.
-   * You won't need it on your project.
-   */
   window?: () => Window;
   children?: React.ReactNode;
 }
-
-function ElevationScroll(props: Props) {
-  const { children, window } = props;
-
-  return children;
-}
-
 export default function ElevateAppBar(props: Props) {
   return (
     <React.Fragment>
       <CssBaseline />
-      <ElevationScroll {...props}>
+      {/* <ElevationScroll {...props}> */}
         <AppBar>
           <Toolbar>
             <Box display="flex" alignItems="center" width="100%">
@@ -38,7 +28,7 @@ export default function ElevateAppBar(props: Props) {
             </Box>
           </Toolbar>
         </AppBar>
-      </ElevationScroll>
+      {/* </ElevationScroll> */}
       <Toolbar />
     </React.Fragment>
   );

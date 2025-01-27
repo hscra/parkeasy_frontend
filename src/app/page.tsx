@@ -48,7 +48,7 @@ const Home: React.FC = () => {
   }, [])
 
   return (
-    <div className="w-full min-h-screen bg-gray-50">
+    <div className="w-full h-full bg-gray-50">
       <div className="grid gap-6 p-6">
         <div className="bg-gray-200 h-[700px] rounded-lg flex justify-center items-center relative z-0">
           <div className="w-full h-full rounded-lg">

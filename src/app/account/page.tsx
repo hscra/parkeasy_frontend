@@ -9,7 +9,7 @@ const Account: React.FC = () => {
   const user = {
     username: "JohnDoe123",
     email: "johndoe@example.com",
-    points: 999 
+    points: 5000
   };
 
 
@@ -57,14 +57,13 @@ const Account: React.FC = () => {
   const handleModalClose = () => setOpenModal(false);
 
   return (
-    <div id="account" className="pt-[150px]" style={{ paddingTop: `${navbarHeight}px` }}>
+    <div id="account" className="w-full justify-center" style={{ paddingTop: `${navbarHeight}px` }}>
       <div className="flex flex-col items-center">
         <div className="w-full max-w-4xl bg-gray-200 p-12 rounded-lg shadow-md mb-6">
-          <Typography variant="h3" fontWeight="bold" className="mb-4" marginBottom={2}>
+          <Typography variant="h3" fontWeight="bold" className="mb-4" marginBottom={3}>
             Account Overview
           </Typography>
 
-          {/* User Information */}
           <Card variant="outlined" sx={{ mb: 4, p: 2 }} color="neutral">
             <CardContent>
               <Typography variant="h6" fontWeight="bold">
@@ -96,7 +95,6 @@ const Account: React.FC = () => {
             />
           </Box>
 
-          {/* Progress Bar */}
           <Box className="mb-6">
             <Typography variant="body1" className="mb-2">
               Points: {user.points} / {currentTier.maxPoints}
@@ -123,7 +121,6 @@ const Account: React.FC = () => {
             />
           </Box>
 
-          {/* Tier Explanation Button */}
           <Box>
             <Tooltip title="Bronze < Silver < Gold < Platinum" placement="bottom-start">
               <Typography

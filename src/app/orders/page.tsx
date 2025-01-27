@@ -85,17 +85,11 @@ const Orders: React.FC = () => {
   };
 
   return (
-    <div className="w-full h-full">
-      {/* Grey Background Section - Full Height */}
-      <div className="w-full py-8 rounded-lg min-h-screen flex flex-col justify-center">
-        {/* Reservation Section with wider backdrop */}
-        <div className="w-full px-8 md:px-16 xl:px-32 py-8 rounded-lg">
-          <div className="w-full max-w-full p-8 grid grid-cols-1 md:grid-cols-2 gap-8">
-            {/* Left Column: Reservation Information */}
-            <div className="flex flex-col">
-              <h2 className="text-3xl font-semibold mb-8 text-gray-800">Your Reservations</h2>
-
-              {/* Display reservations or a message if there are none */}
+    <div className="w-full min-h-screen flex flex-col justify-start pt-[50px]">
+      <div className="w-full py-4 px-8 rounded-lg flex flex-col justify-center">
+        <div className="w-full max-w-full p-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="flex flex-col">
+            <h2 className="text-3xl font-semibold mb-4 text-gray-800">Your Reservations</h2>
               {mockReservations.length > 0 ? (
                 mockReservations.map((reservation) => (
                   <button
@@ -118,12 +112,8 @@ const Orders: React.FC = () => {
                 <p className="text-xl text-gray-500">No reservations found.</p>
               )}
             </div>
-
-            {/* Right Column: Map Section */}
             <div className="bg-gray-200 h-[700px] rounded-lg flex justify-center items-center relative z-0">
-              <div className="w-full h-full rounded-lg">
-                {/* Pass the selectedLocation to the Map component */}
-                {/* <Map locations={mockReservations} selectedLocation={selectedLocation} /> */}
+            <div className="w-full h-full rounded-lg">
               </div>
             </div>
           </div>
@@ -154,7 +144,6 @@ const Orders: React.FC = () => {
           </table>
         </div>
       </div>
-    </div>
   );
 };
 
