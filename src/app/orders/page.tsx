@@ -150,8 +150,8 @@ const Orders: React.FC = () => {
                 <p className="text-xl text-gray-500">No reservations found.</p>
               )}
             </div>
-            <div className="bg-gray-200 h-[700px] rounded-lg flex justify-center items-center relative z-0">
-            <div className="w-full h-full rounded-lg">
+            <div className="bg-white shadow-lg rounded-lg h-[500px] relative">
+          <div className="absolute inset-0">
             <Map locations={locations} selectLocation={selectLocation} />
               </div>
             </div>
