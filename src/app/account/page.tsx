@@ -59,15 +59,14 @@ const Account: React.FC = () => {
   return (
     <div id="account" className="w-full justify-center" style={{ paddingTop: `${navbarHeight}px` }}>
       <div className="flex flex-col items-center">
-        <div className="w-full max-w-4xl bg-gray-200 p-12 rounded-lg shadow-md mb-6">
+        <div className="w-full max-w-4xl bg-gray-100 p-12 rounded-lg shadow-md mb-6">
           <Typography variant="h3" fontWeight="bold" className="mb-4" marginBottom={3}>
-            Account Overview
+            <text className="text-blue-600">Account Overview</text>
           </Typography>
-
           <Card variant="outlined" sx={{ mb: 4, p: 2 }} color="neutral">
             <CardContent>
               <Typography variant="h6" fontWeight="bold">
-                User Information
+                <text className="text-blue-700">User Information</text>
               </Typography>
               <Typography variant="body1">
                 <strong>Username:</strong> {user.username}

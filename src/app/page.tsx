@@ -187,8 +187,8 @@ const Home: React.FC = () => {
 
       <footer className="bg-gray-800 text-white text-center py-6 mt-12">
         <div className="container mx-auto px-6">
-          <p className="text-lg">Contact Us: <a href="mailto:contact@yourcompany.com" className="text-blue-400">contact@yourcompany.com</a></p>
-          <p className="text-sm mt-2">© 2025 Your Company. All rights reserved.</p>
+          <p className="text-lg">Contact Us: <a href="mailto:contact@yourcompany.com" className="text-blue-400">support@parkeasy.com</a></p>
+          <p className="text-sm mt-2">© 2025 ParkEasy. All rights reserved.</p>
         </div>
       </footer>
     </div>
