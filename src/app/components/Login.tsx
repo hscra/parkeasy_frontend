@@ -10,6 +10,7 @@ const Login: React.FC = () => {
   const router = useRouter();
 
   React.useEffect(() => {
+    // This could be later substituted with a call to nextJS API of checking session status
     fetch(process.env.SERVER_DOMAIN + "/member/currentUser", {
       method: 'GET',
       headers: {
@@ -35,8 +36,9 @@ const Login: React.FC = () => {
 
     const formData = new FormData(event.currentTarget);
     const formJson = Object.fromEntries((formData as FormData).entries());
+    console.log("form json", formJson);
 
-    fetch(process.env.SERVER_DOMAIN + "/member/login", {
+    fetch("/api/login", {
       method: 'POST',
       headers: {
         "Content-Type": "application/json",
@@ -53,7 +55,27 @@ const Login: React.FC = () => {
       })
       .catch((error) => {
         console.log("/login", error);
-      })
+      }
+    )
+
+    // fetch(process.env.SERVER_DOMAIN + "/member/login", {
+    //   method: 'POST',
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    //   body: JSON.stringify(formJson),
+    //   credentials: 'include'
+    // })
+    //   .then(async response => {
+    //     if (!response.ok) {
+    //       return response.text().then(text => { throw new Error(text) })
+    //     }
+    //     setLoggedIn(true)
+    //     router.push("/")
+    //   })
+    //   .catch((error) => {
+    //     console.log("/login", error);
+    //   })
   }
 
   return (

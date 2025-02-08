@@ -2,17 +2,15 @@ import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
-// Define a secret key for JWT encryption
-const secretKey = "secret";
-
 // Encode the secret key as bytes
-const key = new TextEncoder().encode(secretKey);
+const key = new TextEncoder().encode(process.env.JWT_TOKEN);
+const expires_after = parseInt(process.env.SESSION_COOKIE_LIFESPAN || '0', 10);
 
 export async function encrypt(payload: any) {
   return await new SignJWT(payload)
     .setProtectedHeader({ alg: "HS256" }) // Set the algorithm for JWT signing
     .setIssuedAt() // Set the issuance time of the JWT
-    .setExpirationTime("10 sec from now") // Set the expiration time of the JWT
+    .setExpirationTime(`${expires_after} sec from now`) // Set the expiration time of the JWT
     .sign(key); // Sign the JWT using the secret key
 }
 
@@ -38,6 +36,8 @@ export async function login({
     body: JSON.stringify({ memberEmail, memberPassword }),
   });
 
+  console.log("after login from lib.tsx", response)
+
   if (!response.ok) {
     throw new Error("Login failed!");
   }
@@ -45,29 +45,30 @@ export async function login({
   console.log(data);
 
   // Create the session
-  const expires = new Date(Date.now() + 10 * 1000); // Set session expiration time (10 seconds from now)
+  const expires = new Date(Date.now() + (expires_after * 1000)); // Set session expiration time
   const session = await encrypt({ data, expires }); // Encrypt user data and set expiration time
 
   // Save the session in a cookie
-  (
-    await // Save the session in a cookie
-    cookies()
-  ).set("session", session, { expires, httpOnly: true }); // Set session cookie with expiration time and HTTP only flag
+  (await cookies()).set("session", session, { expires, httpOnly: true }); // Set session cookie with expiration time and HTTP only flag
   return data;
 }
 
 export async function logout() {
   // Destroy the session by clearing the session cookie
-  (
-    await // Destroy the session by clearing the session cookie
-    cookies()
-  ).set("session", "", { expires: new Date(0) });
+  (await cookies()).set("session", "", { expires: new Date(0) });
 }
 
 export async function getSession() {
+  console.log("lib.tsx - getSession");
+
   const session = (await cookies()).get("session")?.value; // Retrieve the session cookie value
+  console.log("lib session", session);
   if (!session) return null; // If session is not found, return null
-  return await decrypt(session); // Decrypt and return the session payload
+
+  const decrypted = decrypt(session);
+  console.log("decrypted session", decrypted);
+
+  return await decrypted; // Decrypt and return the session payload
 }
 
 export async function updateSession(request: NextRequest) {
@@ -75,8 +76,9 @@ export async function updateSession(request: NextRequest) {
   if (!session) return; // If session is not found, return
 
   // Refresh the session expiration time
+  //! Here we may need to read only the session.value and not the whole session object
   const parsed = await decrypt(session); // Decrypt the session data
-  parsed.expires = new Date(Date.now() + 10 * 1000); // Set a new expiration time (10 seconds from now)
+  parsed.expires = new Date(Date.now() + expires_after * 1000); // Set a new expiration time
   const res = NextResponse.next(); // Create a new response
   res.cookies.set({
     name: "session",

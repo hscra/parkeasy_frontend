@@ -26,8 +26,8 @@ const Orders: React.FC = () => {
 
   useEffect(() => {
     const fetchSession = async () => {
-      const res = await fetch("/api/getSession");
-      console.log(res);
+      const res = await fetch("/api/getSession", {credentials: "include"});
+      console.log("/orders page session", res);
 
       if (!res.ok) {
         router.push("/signin");
