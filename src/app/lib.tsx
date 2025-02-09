@@ -36,13 +36,10 @@ export async function login({
     body: JSON.stringify({ memberEmail, memberPassword }),
   });
 
-  console.log("after login from lib.tsx", response)
-
   if (!response.ok) {
     throw new Error("Login failed!");
   }
   const data = await response.json();
-  console.log(data);
 
   // Create the session
   const expires = new Date(Date.now() + (expires_after * 1000)); // Set session expiration time
@@ -59,15 +56,10 @@ export async function logout() {
 }
 
 export async function getSession() {
-  console.log("lib.tsx - getSession");
-
   const session = (await cookies()).get("session")?.value; // Retrieve the session cookie value
-  console.log("lib session", session);
   if (!session) return null; // If session is not found, return null
 
   const decrypted = decrypt(session);
-  console.log("decrypted session", decrypted);
-
   return await decrypted; // Decrypt and return the session payload
 }
 
