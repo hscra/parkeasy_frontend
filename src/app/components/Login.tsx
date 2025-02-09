@@ -29,14 +29,13 @@ const Login: React.FC = () => {
     ).catch((error) => {
       console.log('Login error!', error);
     })
-  }, [])
+  }, [router])
 
   const login = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
 
     const formData = new FormData(event.currentTarget);
     const formJson = Object.fromEntries((formData as FormData).entries());
-    console.log("form json", formJson);
 
     fetch(process.env.SERVER_DOMAIN + "/member/login", {
       method: 'POST',
@@ -51,7 +50,6 @@ const Login: React.FC = () => {
           return response.text().then(text => { throw new Error(text) })
         }
         setLoggedIn(true)
-        console.log("successful login, api/login/POST", response)
         router.push("/")
       })
       .catch((error) => {

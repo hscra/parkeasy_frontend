@@ -76,7 +76,6 @@ export async function updateSession(request: NextRequest) {
   if (!session) return; // If session is not found, return
 
   // Refresh the session expiration time
-  //! Here we may need to read only the session.value and not the whole session object
   const parsed = await decrypt(session); // Decrypt the session data
   parsed.expires = new Date(Date.now() + expires_after * 1000); // Set a new expiration time
   const res = NextResponse.next(); // Create a new response

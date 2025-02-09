@@ -10,6 +10,7 @@ export type Location = {
   city: string,
   position: Position
 }
+
 export type Position = {
   lat: number,
   lng: number

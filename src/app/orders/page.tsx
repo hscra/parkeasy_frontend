@@ -22,12 +22,12 @@ const Orders: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
-  // Fetch user data from localStorage
-
   useEffect(() => {
     const fetchSession = async () => {
-      const res = await fetch("/api/getSession", {credentials: "include"});
-      console.log("/orders page session", res);
+      const res = await fetch(process.env.SERVER_DOMAIN + "/member/currentUser", {
+        method: "GET",
+        credentials: "include"
+      });
 
       if (!res.ok) {
         router.push("/signin");
@@ -36,7 +36,7 @@ const Orders: React.FC = () => {
 
       try {
         const data = await res.json();
-        setUser(data); // Assuming the user data is returned in the response
+        setUser(data);
       } catch (error) {
         console.error("Error parsing JSON:", error);
       } finally {
@@ -53,8 +53,7 @@ const Orders: React.FC = () => {
 
       try {
         const response = await fetch(
-          process.env.SERVER_DOMAIN + "/reservation/getAll",
-          {
+          process.env.SERVER_DOMAIN + "/reservation/getAll", {
             method: "GET",
             credentials: "include", // Include session cookies
           }
