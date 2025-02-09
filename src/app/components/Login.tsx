@@ -10,6 +10,7 @@ const Login: React.FC = () => {
   const router = useRouter();
 
   React.useEffect(() => {
+    // This could be later substituted with a call to nextJS API of checking session status
     fetch(process.env.SERVER_DOMAIN + "/member/currentUser", {
       method: 'GET',
       headers: {
@@ -22,13 +23,12 @@ const Login: React.FC = () => {
 
         if (text !== "") {
           let json = JSON.parse(text); // We can work on user data here
-          router.push("/")
         }
       }
     ).catch((error) => {
       console.log('Login error!', error);
     })
-  }, [])
+  }, [router])
 
   const login = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
@@ -53,7 +53,8 @@ const Login: React.FC = () => {
       })
       .catch((error) => {
         console.log("/login", error);
-      })
+      }
+    )
   }
 
   return (
