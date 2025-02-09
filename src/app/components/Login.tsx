@@ -23,7 +23,6 @@ const Login: React.FC = () => {
 
         if (text !== "") {
           let json = JSON.parse(text); // We can work on user data here
-          console.log("currentUser", json);
         }
       }
     ).catch((error) => {
