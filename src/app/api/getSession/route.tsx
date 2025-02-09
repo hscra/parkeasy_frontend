@@ -1,5 +1,4 @@
-import { error } from "console";
-import { getSession } from "../../orders/lib";
+import { getSession } from "@/app/lib";
 import { NextResponse } from "next/server";
 
 export async function GET() {
