@@ -5,8 +5,7 @@ import CardContent from '@mui/joy/CardContent';
 import Typography from '@mui/joy/Typography';
 import Link from '@mui/joy/Link';
 import Image from 'next/image';
-import Logo from '../../public/logo.jpg';
-import Regi from "@/app/components/Regi";
+import Registration from "@/app/components/Registration";
 
 const Signup: React.FC = () => {
   return (

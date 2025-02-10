@@ -1,7 +1,21 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { LinearProgress, Typography, Box, Chip, Tooltip, Card, CardContent, Modal, Dialog, DialogActions, DialogContent, DialogTitle, Button } from "@mui/material";
+import {
+  LinearProgress,
+  Typography,
+  Box,
+  Chip,
+  Tooltip,
+  Card,
+  CardContent,
+  Modal,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Button
+} from "@mui/material";
 
 const Account: React.FC = () => {
 
@@ -16,12 +30,12 @@ const Account: React.FC = () => {
   const tiers = [
     { name: "Bronze", points: 0, maxPoints: 1000, color: "brown" },
     { name: "Silver", points: 1000, maxPoints: 2500, color: "#add8e6" },
-    { name: "Gold", points: 2500, maxPoints: 5000, color: "#ffd700" }, 
-    { name: "Platinum", points: 5000, maxPoints: Infinity, color: "linear-gradient(45deg, #00c6ff, #0072ff)" }, 
+    { name: "Gold", points: 2500, maxPoints: 5000, color: "#ffd700" },
+    { name: "Platinum", points: 5000, maxPoints: Infinity, color: "linear-gradient(45deg, #00c6ff, #0072ff)" },
   ];
 
   const currentTier = tiers.find((tier) => user.points >= tier.points && user.points <= tier.maxPoints) || tiers[0];
-  const nextTier = tiers[tiers.indexOf(currentTier) + 1] || currentTier; 
+  const nextTier = tiers[tiers.indexOf(currentTier) + 1] || currentTier;
 
   let progress = 0;
 
@@ -31,13 +45,13 @@ const Account: React.FC = () => {
   }
   else if (currentTier.name === "Bronze") {
     progress = (user.points / currentTier.maxPoints) * 100;
-  } 
+  }
   else if (currentTier.name === "Silver") {
     progress = ((user.points - currentTier.points) / (nextTier.maxPoints - currentTier.points)) * 100;
-  } 
+  }
   else if (currentTier.name === "Gold") {
     progress = ((user.points - currentTier.points) / (5000 - currentTier.points)) * 100;
-  } 
+  }
   else if (currentTier.name === "Platinum") {
     progress = 100;
   }
@@ -89,7 +103,7 @@ const Account: React.FC = () => {
                 padding: "0.5rem 1rem",
                 backgroundColor: currentTier.color,
                 background: currentTier.name === "Platinum" ? currentTier.color : undefined,
-                boxShadow: currentTier.name === "Platinum" ? "0 0 10px rgba(0, 114, 255, 0.5)" : undefined, 
+                boxShadow: currentTier.name === "Platinum" ? "0 0 10px rgba(0, 114, 255, 0.5)" : undefined,
               }}
             />
           </Box>
