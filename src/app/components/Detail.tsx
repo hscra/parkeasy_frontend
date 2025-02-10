@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import Table from '@mui/joy/Table';
 import Sheet from '@mui/joy/Sheet';
-import DetailParkingSpaceRow from "../components/DetailParkingSpaceRow";
+import DetailParkingSpaceRow from "./DetailParkingSpaceRow";
 
 export type ParkingDetailsProps = {
   id_location: number;

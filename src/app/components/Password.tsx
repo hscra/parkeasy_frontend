@@ -12,6 +12,7 @@ const Password: React.FC = () => {
     <Stack spacing={0.5} sx={{ '--hue': Math.min(value.length * 10, 120) }}>
       <Input
         type="password"
+        name="password"
         placeholder="Password"
         startDecorator={<Key />}
         value={value}
