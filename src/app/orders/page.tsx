@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import Map from "../components/Map";
 import { Location } from "../parking/page";
 import { UserData } from "../components/ParkingSpace";
+import { useRouter } from 'next/navigation'
 
 // Types for reservation data
 export type Reservation = {
@@ -12,7 +13,7 @@ export type Reservation = {
   endTime: string;
   startTime: string;
   place: string;
-  paymentStatus: string;
+  paymentStatus: number;
   position: Position;
 };
 
@@ -26,6 +27,7 @@ const Orders: React.FC = () => {
   const [user, setUser] = useState<UserData>({} as UserData);
   const [userReservations, setUserReservations] = useState<Reservation[]>([]);
   // const [selectedSpace, setSelectedSpace] = useState<number>(0);
+  const router = useRouter()
 
   const fetchUser = async () => {
     try {
@@ -110,6 +112,45 @@ const Orders: React.FC = () => {
     }
   };
 
+  const payForReservation = async (id: number) => {
+    console.log("Pay for reservation", id);
+    fetch(process.env.SERVER_DOMAIN + "/payments/checkout", {
+      method: 'POST',
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        amount: 1000,
+        quantity: 1,
+        name: `Parking Reservation ${id}`,
+        currency: "PLN",
+      }),
+      credentials: 'include'
+    })
+      .then(async response => {
+        if (!response.ok) {
+          return response.text().then(text => { throw new Error(text) })
+        }
+
+        let res = await response.json();
+        console.log(res);
+
+        if (res.status === "SUCCESS") {
+          console.log("Payment successful!");
+          localStorage.setItem("reservationId", id.toString());
+          window.location.href = res.sessionUri;
+        }
+      })
+      .catch((error) => {
+        alert("Payment failed! Please try again.");
+      }
+    )
+  };
+
+  const cancelReservation = async (id: number) => {
+    console.log("Cancel reservation", id);
+  };
+
   useEffect(() => {
     const initializeData = async () => {
       const userData = await fetchUser();
@@ -185,11 +226,11 @@ const Orders: React.FC = () => {
                     <p className="text-2xl mb-4 text-center">
                       <strong className="text-blue-600">Payment Status:&nbsp;</strong>
                       {reservation.paymentStatus == null ?
-                        <button className="underline" onClick={() => { console.log("Payment button clicked"); }}>Awaiting Payment</button>
-                       : reservation.paymentStatus}
+                        <button className="underline" onClick={() => payForReservation(reservation.id)}>Awaiting Payment</button>
+                       : reservation.paymentStatus === 1 ? "Paid" : "Failed"}
                     </p>
                     <p className="text-2xl mb-4 text-center">
-                      <button className="underline text-red-600" onClick={() => { console.log("Cancel button clicked"); }}>Cancel</button>
+                      <button className="underline text-red-600" onClick={() => cancelReservation(reservation.id)}>Cancel</button>
                     </p>
                   </div>
                 ))
