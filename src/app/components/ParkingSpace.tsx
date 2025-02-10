@@ -103,7 +103,7 @@ const ParkingSpace: React.FC<ParkingSpaceProps> = ({ space }) => {
     <Card variant="outlined" className="p-6">
       <CardContent>
         <Typography level="h3" className="mb-4">
-          <h3 className="text-blue-600">Parking Space Reservation</h3>
+          <span className="text-blue-600 bigger00">Parking Space Reservation</span>
         </Typography>
 
         {/* Parking Space Info */}
