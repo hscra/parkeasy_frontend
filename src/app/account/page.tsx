@@ -26,7 +26,6 @@ const Account: React.FC = () => {
     points: 5000
   };
 
-
   const tiers = [
     { name: "Bronze", points: 0, maxPoints: 1000, color: "brown" },
     { name: "Silver", points: 1000, maxPoints: 2500, color: "#add8e6" },
