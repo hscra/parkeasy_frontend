@@ -11,6 +11,7 @@ export type ParkingSpaceDataItem = {
   id: number;
   city_id: number;
   availability: boolean;
+  price: number;
 }
 
 const Detail: React.FC<ParkingDetailsProps> = ({id_location, selectSpace}) => {
@@ -35,6 +36,7 @@ const Detail: React.FC<ParkingDetailsProps> = ({id_location, selectSpace}) => {
           id: el.id,
           city_id: el.city_Id,
           availability: el.availability,
+          price: el.price,
         } as ParkingSpaceDataItem
       }))
     } catch (error) {
@@ -62,6 +64,7 @@ const Detail: React.FC<ParkingDetailsProps> = ({id_location, selectSpace}) => {
               <th>Row (id)</th>
               <th>city_id</th>
               <th>Availability</th>
+              <th>Price</th>
             </tr>
           </thead>
           <tbody>
@@ -71,6 +74,7 @@ const Detail: React.FC<ParkingDetailsProps> = ({id_location, selectSpace}) => {
                 id={ps.id}
                 city_id={ps.city_id}
                 availability={ps.availability}
+                price={ps.price}
                 onClick={() => selectSpace(ps.id)}
               />
             ))}

@@ -52,6 +52,7 @@ const Login: React.FC = () => {
         router.push("/")
       })
       .catch((error) => {
+        alert("Login failed! Please try again.");
         console.log("/login", error);
       }
     )

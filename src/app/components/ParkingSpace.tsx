@@ -8,7 +8,7 @@ export type ParkingSpaceProps = {
 export type UserData = {
   id: number;
   name: string;
-  login: string;
+  email: string;
   password: null;
 };
 
@@ -16,7 +16,7 @@ const ParkingSpace: React.FC<ParkingSpaceProps> = ({ space }) => {
   const [user, setUser] = React.useState<UserData>({
     id: 0,
     name: "",
-    login: "",
+    email: "",
     password: null,
   });
 
@@ -103,7 +103,7 @@ const ParkingSpace: React.FC<ParkingSpaceProps> = ({ space }) => {
     <Card variant="outlined" className="p-6">
       <CardContent>
         <Typography level="h3" className="mb-4">
-          <h3 className="text-blue-600">Parking Space Reservation</h3>
+          <span className="text-blue-600 bigger00">Parking Space Reservation</span>
         </Typography>
 
         {/* Parking Space Info */}
@@ -114,7 +114,7 @@ const ParkingSpace: React.FC<ParkingSpaceProps> = ({ space }) => {
         {/* User Info */}
         <Typography className="mb-4">
           <strong className="text-blue-800">Current User:</strong>{" "}
-          {user.id !== 0 ? `${user.name} (${user.login})` : "Not logged in"}
+          {user.id !== 0 ? `${user.name} (${user.email})` : "Not logged in"}
         </Typography>
 
         {/* Feedback Message */}
