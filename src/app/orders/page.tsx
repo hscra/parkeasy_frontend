@@ -1,139 +1,186 @@
-"use client";
-import React, { useEffect, useState } from "react";
-import Table from "@mui/joy/Table";
-import { useRouter } from "next/navigation";
+"use client"; // Mark as client component
 
-interface Reservation {
-  reservationId: number;
-  parkingSpaceId: number;
-  userId: number;
-}
+import React, { useState, useEffect } from "react";
+import Map from "../components/Map"; 
+import Detail, { ParkingSpaceDataItem } from "../components/Detail";
+import ParkingSpace from "../components/ParkingSpace";
+import { Location } from "../parking/page";
 
-interface User {
+// Types for reservation data
+export type Reservation = {
   id: number;
-  name: string;
-  email: string;
-}
+  time: string;
+  place: string;
+  paymentStatus: string;
+  position: Position;
+};
+
+export type Position = {
+  lat: number;
+  lng: number;
+};
 
 const Orders: React.FC = () => {
-  const [user, setUser] = useState<User | null>(null);
-  const [reservations, setReservations] = useState<Reservation[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const router = useRouter();
 
-  useEffect(() => {
-    const fetchSession = async () => {
-      const res = await fetch(process.env.SERVER_DOMAIN + "/member/currentUser", {
+  const [locations, setLocations] = useState<Location[]>([]);
+  const [selectedLocation, setSelectedLocation] = useState<number>(0);
+  const [selectedSpace, setSelectedSpace] = useState<number>(0);
+  
+  const getLocations = async () => {
+    const apiUrl = process.env.SERVER_DOMAIN + "/location/getAllLocations";
+    try {
+      const response = await fetch(apiUrl, {
         method: "GET",
-        credentials: "include"
+        credentials: "include",
       });
-
-      if (!res.ok) {
-        router.push("/signin");
-        return;
+  
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
       }
-
-      try {
-        const data = await res.json();
-        setUser(data);
-      } catch (error) {
-        console.error("Error parsing JSON:", error);
-      } finally {
-        setLoading(false);
-      }
+  
+      const data = await response.json();
+  
+      setLocations(
+        data.map((el: any) => ({
+          id: el.id,
+          city: el.city,
+          position: {
+            lat: el.lat,
+            lng: el.lng,
+          } as Position,
+        }))
+      );
+    } catch (error) {
+        console.error("Error fetching location data", error);
+    }
     };
-    fetchSession();
-  }, [router]);
+    
+      useEffect(() => {
+        getLocations();
+      }, []);
+    
+      const selectLocation = (id: number) => {
+        setSelectedLocation(id);
+        setSelectedSpace(0);
+      };
 
-  // Fetch reservations for the user
-  useEffect(() => {
-    const fetchReservations = async () => {
-      if (!user) return;
+  const mockReservations: Reservation[] = [
+    {
+      id: 1,
+      time: "2025-01-19 14:00",
+      place: "Downtown Parking Lot",
+      paymentStatus: "Paid",
+      position: { lat: 40.7128, lng: -74.0060 }, // Example coordinates (New York)
+    },
+    {
+      id: 2,
+      time: "2025-01-20 10:00",
+      place: "Central Plaza Parking",
+      paymentStatus: "Awaiting Payment",
+      position: { lat: 34.0522, lng: -118.2437 }, // Example coordinates (Los Angeles)
+    },
+    {
+      id: 3,
+      time: "2025-01-21 16:30",
+      place: "Market Street Garage",
+      paymentStatus: "Paid",
+      position: { lat: 51.5074, lng: -0.1278 }, // Example coordinates (London)
+    },
+  ];
 
-      try {
-        const response = await fetch(
-          process.env.SERVER_DOMAIN + "/reservation/getAll", {
-            method: "GET",
-            credentials: "include", // Include session cookies
-          }
-        );
+  // Mock data for reservation history (Past reservations)
+  const reservationHistory: Reservation[] = [
+    {
+      id: 4,
+      time: "2024-12-15 18:30",
+      place: "Eastside Parking",
+      paymentStatus: "Awaiting Payment",
+      position: { lat: 48.8566, lng: 2.3522 }, // Example coordinates (Paris)
+    },
+    {
+      id: 5,
+      time: "2024-11-05 13:00",
+      place: "Westfield Mall Parking",
+      paymentStatus: "Paid",
+      position: { lat: 37.7749, lng: -122.4194 }, // Example coordinates (San Francisco)
+    },
+    {
+      id: 6,
+      time: "2024-09-10 11:45",
+      place: "Airport Parking",
+      paymentStatus: "Awaiting Payment",
+      position: { lat: 52.5200, lng: 13.4050 }, // Example coordinates (Berlin)
+    },
+  ];
 
-        if (!response.ok) {
-          throw new Error("Failed to fetch reservations.");
-        }
+  // State to track the selected reservation location
 
-        const data = await response.json();
-        setReservations(data);
-      } catch (err: any) {
-        setError(err.message);
-      }
-    };
-
-    fetchReservations();
-  }, [user]);
-
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
-  if (error) {
-    return <div style={{ color: "red" }}>{error}</div>;
-  }
-
-  if (!user) {
-    return <div>No user data available. Please log in again.</div>;
-  }
+  // Handle reservation click and update the map's location
+  const handleReservationClick = (position: Position) => {
+    const latLng = new google.maps.LatLng(position.lat, position.lng);
+    setSelectedLocation(latLng);
+  };
 
   return (
-    <div id="orders" className="flex justify-center align-center">
-      {/* User Information Table */}
-      <div className="w-full max-w-4xl p-4 bg-white shadow-lg rounded-lg">
-        <h2 className="text-2xl font-semibold mb-4">User Profile</h2>
-        <Table
-          aria-label="User Profile"
-          className="table-auto w-full border-collapse"
-        >
-          <thead>
-            <tr>
-              <th>User ID</th>
-              <th>User Name</th>
-              <th>Email</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>{user.id}</td>
-              <td>{user.name}</td>
-              <td>{user.email}</td>
-            </tr>
-          </tbody>
-        </Table>
-      </div>
+    <div className="w-full h-full bg-gray-50 p-6">
+    <h2 className="text-3xl font-semibold text-left text-blue-600 mb-8">Your Reservations</h2>
+      <div className="w-full py-4 px-8 rounded-lg flex flex-col justify-center">
+        <div className="w-full max-w-full p-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="flex flex-col">
+            
+              {mockReservations.length > 0 ? (
+                mockReservations.map((reservation) => (
+                  <button
+                    key={reservation.id}
+                    onClick={() => handleReservationClick(reservation.position)}
+                    className="bg-gray-200 p-8 mb-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 focus:outline-none"
+                  >
+                    <p className="text-2xl mb-4">
+                      <strong className="text-blue-400">Time:</strong> {reservation.time}
+                    </p>
+                    <p className="text-2xl mb-4">
+                      <strong className="text-blue-500">Place:</strong> {reservation.place}
+                    </p>
+                    <p className="text-2xl mb-4">
+                      <strong className="text-blue-600">Payment Status:</strong> {reservation.paymentStatus}
+                    </p>
+                  </button>
+                ))
+              ) : (
+                <p className="text-xl text-gray-500">No reservations found.</p>
+              )}
+            </div>
+            <div className="bg-white shadow-lg rounded-lg h-[500px] relative">
+          <div className="absolute inset-0">
+            <Map locations={locations} selectLocation={selectLocation} />
+              </div>
+            </div>
+          </div>
+        </div>
 
-      {/* Reservations Table */}
-      <div className="w-full max-w-4xl p-4 bg-white shadow-lg rounded-lg">
-        <h2>Reservations</h2>
-        <Table aria-label="Reservations">
-          <thead>
-            <tr>
-              <th>Reservation ID</th>
-              <th>Parking Space ID</th>
-              <th>User ID</th>
-            </tr>
-          </thead>
-          <tbody>
-            {reservations.map((res) => (
-              <tr key={res.reservationId}>
-                <td>{res.reservationId}</td>
-                <td>{res.parkingSpaceId}</td>
-                <td>{res.userId}</td>
+        {/* Reservation History Section Below Reservations */}
+        <div className="w-full px-8 md:px-16 xl:px-32 py-8 mt-12 rounded-lg shadow-lg">
+          <h2 className="text-3xl font-semibold mb-4 text-blue-600">Reservation History</h2>
+          <table className="min-w-full table-auto">
+            <thead>
+              <tr className="bg-gray-100">
+                <th className="py-2 px-4 text-left text-lg font-medium text-gray-700">Time</th>
+                <th className="py-2 px-4 text-left text-lg font-medium text-gray-700">Place</th>
+                <th className="py-2 px-4 text-left text-lg font-medium text-gray-700">Payment Status</th>
               </tr>
-            ))}
-          </tbody>
-        </Table>
+            </thead>
+            <tbody>
+              {reservationHistory.map((reservation) => (
+                <tr key={reservation.id} className="border-b">
+                  <td className="py-4 px-4 text-lg text-gray-700">{reservation.time}</td>
+                  <td className="py-4 px-4 text-lg text-gray-700">{reservation.place}</td>
+                  <td className="py-4 px-4 text-lg text-gray-700">{reservation.paymentStatus}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
-    </div>
   );
 };
 

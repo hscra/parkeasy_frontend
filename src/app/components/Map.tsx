@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Location } from "../page";
+import { Location } from "../parking/page";
 import { Loader } from "@googlemaps/js-api-loader";
 
 type MapProps = {
@@ -69,7 +69,7 @@ const Map: React.FC<MapProps> = ({ locations, selectLocation }) => {
 
   return (
     <>
-      <div style={{ height: "600px" }} ref={mapRef}></div>
+      <div style={{ height: "600px" }} ref={mapRef} ></div>
     </>
   );
 };

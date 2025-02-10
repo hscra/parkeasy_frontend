@@ -1,107 +1,143 @@
-import { Button } from "@mui/joy";
 import React from "react";
+import { Button, Card, CardContent, Typography, Alert } from "@mui/joy";
 
 export type ParkingSpaceProps = {
   space: number;
-}
+};
 
 export type UserData = {
   id: number;
   name: string;
   login: string;
   password: null;
-}
+};
 
-const ParkingSpace: React.FC<ParkingSpaceProps> = ({space}) => {
+const ParkingSpace: React.FC<ParkingSpaceProps> = ({ space }) => {
   const [user, setUser] = React.useState<UserData>({
     id: 0,
     name: "",
     login: "",
-    password: null
+    password: null,
   });
 
-  const reservationRequestValid = () => {
-    let message = null;
+  const [feedback, setFeedback] = React.useState<string | null>(null); // For showing success or error messages
 
+  const reservationRequestValid = (): string | null => {
     if (user.id === 0) {
-      message = "User not logged in!";
-    } else if (space === 0) {
-      message = "Space not chosen!";
+      return "User not logged in! Please log in to proceed.";
     }
-
-    return message
-  }
+    if (space === 0) {
+      return "Parking space not chosen! Please select a space.";
+    }
+    return null;
+  };
 
   const makeReservation = async () => {
     // Validate prerequisites
-    const message = reservationRequestValid()
+    const message = reservationRequestValid();
     if (message) {
-      alert(message)
+      setFeedback(message); // Show validation error
       return;
     }
 
     // Operate further
-    fetch(process.env.SERVER_DOMAIN + "/reservation/create", {
-      method: 'POST',
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        userId: user.id,
-        parkingSpaceId: space
-      }),
-      credentials: 'include'
-    })
-      .then(async response => {
-        let code = response.status;
+    try {
+      const response = await fetch(process.env.SERVER_DOMAIN + "/reservation/create", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId: user.id,
+          parkingSpaceId: space,
+        }),
+        credentials: "include",
+      });
 
-        switch (code) {
-          case 200:
-            console.log("Success!");
-            break;
-          case 409:
-            alert(`Data conflict! (${code}) [${await response.text()}]`)
-            break;
-          case 500:
-            alert(`Server error! (${code}) [${await response.text()}]`)
-            break;
-          default:
-            alert(`Unknown response code! (${code}) [${await response.text()}]`)
-            break;
-        }
-      })
-      .catch((error) => {
-        console.log("/login", error);
-      })
-  }
+      const responseText = await response.text();
+      switch (response.status) {
+        case 200:
+          setFeedback("Reservation confirmed! 🎉");
+          break;
+        case 409:
+          setFeedback(`Conflict: ${responseText}`);
+          break;
+        case 500:
+          setFeedback(`Server error: ${responseText}`);
+          break;
+        default:
+          setFeedback(`Unexpected response: ${responseText}`);
+          break;
+      }
+    } catch (error) {
+      setFeedback("An error occurred while making the reservation.");
+      console.error(error);
+    }
+  };
 
   React.useEffect(() => {
-    fetch(process.env.SERVER_DOMAIN + "/member/currentUser", {
-      method: 'GET',
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: 'include'
-    })
-      .then(async (response) => {
-        let text = await response.text()
+    const fetchUser = async () => {
+      try {
+        const response = await fetch(process.env.SERVER_DOMAIN + "/member/currentUser", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        });
 
+        const text = await response.text();
         if (text !== "") {
-          let json = JSON.parse(text) as UserData;
-          setUser(json)
+          const json = JSON.parse(text) as UserData;
+          setUser(json);
         }
+      } catch (error) {
+        console.error("Error fetching current user:", error);
       }
-    ).catch((error) => {
-      console.log('Login error!', error);
-    })
-  }, [])
+    };
+
+    fetchUser();
+  }, []);
 
   return (
-    <>
-      {space}<br />
-      {JSON.stringify(user)}<br />
-      <Button onClick={makeReservation}>Confirm</Button>
-    </>
+    <Card variant="outlined" className="p-6">
+      <CardContent>
+        <Typography level="h3" className="mb-4">
+          <h3 className="text-blue-600">Parking Space Reservation</h3>
+        </Typography>
+
+        {/* Parking Space Info */}
+        <Typography className="mb-4">
+          <strong className="text-blue-700">Selected Parking Space:</strong> {space ? `#${space}` : "None"}
+        </Typography>
+
+        {/* User Info */}
+        <Typography className="mb-4">
+          <strong className="text-blue-800">Current User:</strong>{" "}
+          {user.id !== 0 ? `${user.name} (${user.login})` : "Not logged in"}
+        </Typography>
+
+        {/* Feedback Message */}
+        {feedback && (
+          <Alert
+            variant="soft"
+            color={feedback.includes("🎉") ? "success" : "danger"}
+            className="mb-4"
+          >
+            {feedback}
+          </Alert>
+        )}
+
+        {/* Confirmation Button */}
+        <Button
+          onClick={makeReservation}
+          disabled={user.id === 0 || space === 0}
+          className="mt-4"
+        >
+          Confirm Reservation
+        </Button>
+      </CardContent>
+    </Card>
   );
 };
 
