@@ -16,14 +16,37 @@ import {
   DialogTitle,
   Button
 } from "@mui/material";
+import { UserData } from "../components/ParkingSpace";
 
 const Account: React.FC = () => {
+  const [progress, setProgress] = useState(0);
+  const [user, setUser] = React.useState<UserData>({
+    id: 0,
+    name: "",
+    email: "",
+    password: null,
+    points: 0,
+  });
 
+  const fetchUser = async () => {
+    try {
+      const response = await fetch(process.env.SERVER_DOMAIN + "/member/currentUser", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      });
 
-  const user = {
-    username: "JohnDoe123",
-    email: "johndoe@example.com",
-    points: 5000
+      const text = await response.text();
+      if (text !== "") {
+        const json = JSON.parse(text) as UserData;
+        setUser(json);
+        return json;
+      }
+    } catch (error) {
+      console.error("Error fetching current user:", error);
+    }
   };
 
   const tiers = [
@@ -36,27 +59,29 @@ const Account: React.FC = () => {
   const currentTier = tiers.find((tier) => user.points >= tier.points && user.points <= tier.maxPoints) || tiers[0];
   const nextTier = tiers[tiers.indexOf(currentTier) + 1] || currentTier;
 
-  let progress = 0;
+  const updatePoints = async (points: number) => {
+    let progress = 0;
 
+    if (user.points = 0) {
+      progress;
+    }
+    else if (currentTier.name === "Bronze") {
+      progress = (user.points / currentTier.maxPoints) * 100;
+    }
+    else if (currentTier.name === "Silver") {
+      progress = ((user.points - currentTier.points) / (nextTier.maxPoints - currentTier.points)) * 100;
+    }
+    else if (currentTier.name === "Gold") {
+      progress = ((user.points - currentTier.points) / (5000 - currentTier.points)) * 100;
+    }
+    else if (currentTier.name === "Platinum") {
+      progress = 100;
+    }
 
-  if (user.points = 0) {
-    progress;
-  }
-  else if (currentTier.name === "Bronze") {
-    progress = (user.points / currentTier.maxPoints) * 100;
-  }
-  else if (currentTier.name === "Silver") {
-    progress = ((user.points - currentTier.points) / (nextTier.maxPoints - currentTier.points)) * 100;
-  }
-  else if (currentTier.name === "Gold") {
-    progress = ((user.points - currentTier.points) / (5000 - currentTier.points)) * 100;
-  }
-  else if (currentTier.name === "Platinum") {
-    progress = 100;
-  }
+    setProgress(progress);
+  };
 
   const [navbarHeight, setNavbarHeight] = useState(0);
-
   const [openModal, setOpenModal] = useState(false);
 
   useEffect(() => {
@@ -64,6 +89,15 @@ const Account: React.FC = () => {
     if (navbar) {
       setNavbarHeight(navbar.offsetHeight);
     }
+
+    const initializeData = async () => {
+      const userData = await fetchUser();
+      if (userData?.id) {
+        updatePoints(userData.points);
+      }
+    };
+
+    initializeData();
   }, []);
 
   const handleModalOpen = () => setOpenModal(true);
@@ -82,7 +116,7 @@ const Account: React.FC = () => {
                 <text className="text-blue-700">User Information</text>
               </Typography>
               <Typography variant="body1">
-                <strong>Username:</strong> {user.username}
+                <strong>Username:</strong> {user.name}
               </Typography>
               <Typography variant="body1">
                 <strong>Email:</strong> {user.email}
