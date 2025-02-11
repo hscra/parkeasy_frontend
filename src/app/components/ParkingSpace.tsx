@@ -1,42 +1,37 @@
 import React from "react";
-import {
-  Button,
-  Card,
-  CardContent,
-  Typography,
-  Alert,
-  FormControl,
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
-  List,
-  ListItem,
-  Select,
-  MenuItem,
-  FormLabel, // Use FormLabel instead of InputLabel
-  FormHelperText,
-} from "@mui/joy"; // Ensure everything comes from @mui/joy
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { Button, Card, CardContent, Typography, Alert, FormControl } from "@mui/joy";
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs, { Dayjs } from "dayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { Input } from "@mui/joy";
 
-const ParkingSpace = ({ space }) => {
-  const [user, setUser] = React.useState({ id: 0, name: "", email: "", password: null });
-  const [feedback, setFeedback] = React.useState(null);
-  const [reservationDate, setReservationDate] = React.useState(dayjs());
-  const [selectedTime, setSelectedTime] = React.useState(null);
-  const [duration, setDuration] = React.useState(1); // Default duration: 1 hour
+export type ParkingSpaceProps = {
+  space: number;
+};
 
-  const times = Array.from({ length: 24 }, (_, i) => `${i}:00`);
+export type UserData = {
+  id: number;
+  name: string;
+  email: string;
+  password: null;
+};
 
-  const reservationRequestValid = () => {
+const ParkingSpace: React.FC<ParkingSpaceProps> = ({ space }) => {
+  const [user, setUser] = React.useState<UserData>({
+    id: 0,
+    name: "",
+    email: "",
+    password: null,
+  });
+
+  const [feedback, setFeedback] = React.useState<string | null>(null);
+  const [reservationDate, setReservationDate] = React.useState<Dayjs | null>(dayjs());
+
+  const reservationRequestValid = (): string | null => {
     if (user.id === 0) return "User not logged in! Please log in to proceed.";
     if (space === 0) return "Parking space not chosen! Please select a space.";
     if (!reservationDate) return "Please select a reservation date.";
-    if (!selectedTime) return "Please select a time slot.";
-    if (duration <= 0) return "Please select a valid duration.";
     return null;
   };
 
@@ -50,74 +45,113 @@ const ParkingSpace = ({ space }) => {
     try {
       const response = await fetch(process.env.SERVER_DOMAIN + "/reservation/create", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify({
           userId: user.id,
           parkingSpaceId: space,
-          date: reservationDate.format("YYYY-MM-DD"),
-          timeSlot: selectedTime,
-          duration: duration,
+          date: reservationDate?.format("YYYY-MM-DD"),
         }),
         credentials: "include",
       });
 
       const responseText = await response.text();
-      setFeedback(response.status === 200 ? "Reservation confirmed! 🎉" : responseText);
+      switch (response.status) {
+        case 200:
+          setFeedback("Reservation confirmed! 🎉");
+          break;
+        case 409:
+          setFeedback(`Conflict: ${responseText}`);
+          break;
+        case 500:
+          setFeedback(`Server error: ${responseText}`);
+          break;
+        default:
+          setFeedback(`Unexpected response: ${responseText}`);
+          break;
+      }
     } catch (error) {
       setFeedback("An error occurred while making the reservation.");
+      console.error(error);
     }
   };
+
+  React.useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const response = await fetch(process.env.SERVER_DOMAIN + "/member/currentUser", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        });
+
+        const text = await response.text();
+        if (text !== "") {
+          const json = JSON.parse(text) as UserData;
+          setUser(json);
+        }
+      } catch (error) {
+        console.error("Error fetching current user:", error);
+      }
+    };
+
+    fetchUser();
+  }, []);
 
   return (
     <Card variant="outlined" className="p-6">
       <CardContent>
-        <Typography level="h3" className="mb-4">Parking Space Reservation</Typography>
-        <Typography className="mb-4">Selected Parking Space: #{space || "None"}</Typography>
-        <Typography className="mb-4">Current User: {user.id !== 0 ? `${user.name} (${user.email})` : "Not logged in"}</Typography>
+        <Typography level="h3" className="mb-4">
+          <span className="text-blue-600 bigger00">Parking Space Reservation</span>
+        </Typography>
 
+        {/* Parking Space Info */}
+        <Typography className="mb-4">
+          <strong className="text-blue-700">Selected Parking Space:</strong> {space ? `#${space}` : "None"}
+        </Typography>
+
+        {/* User Info */}
+        <Typography className="mb-4">
+          <strong className="text-blue-800">Current User:</strong>{" "}
+          {user.id !== 0 ? `${user.name} (${user.email})` : "Not logged in"}
+        </Typography>
+
+        {/* Date Picker */}
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <FormControl className="mb-4">
-            <Typography level="body-sm">Reservation Date:</Typography>
-            <DatePicker value={reservationDate} onChange={setReservationDate} disablePast format="DD/MM/YYYY" />
+            <Typography level="body-sm" sx={{ mb: 0.5 }}>
+              <strong className="text-blue-800">Reservation Date:</strong>
+            </Typography>
+            <DatePicker
+              value={reservationDate}
+              onChange={(newDate) => setReservationDate(newDate)}
+              disablePast
+              shouldDisableDate={(date) => date.isAfter(dayjs().add(7, "day"))}
+              format="DD/MM/YYYY"
+            />
           </FormControl>
         </LocalizationProvider>
 
-        <FormControl fullWidth className="mb-4">
-          <FormLabel>Parking Time</FormLabel>
-          <Select
-            value={duration}
-            onChange={(e, newValue) => setDuration(newValue)}
-            label="Parking Duration (Hours)"
-            fullWidth
+        {/* Feedback Message */}
+        {feedback && (
+          <Alert
+            variant="soft"
+            color={feedback.includes("🎉") ? "success" : "danger"}
+            className="mb-4"
           >
-            {["1:00", "2:00", "3:00", "4:00", "5:00", "6:00", "7:00", "8:00", "9:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", "21:00", "22:00", "23:00", "24:00"].map((durationOption) => (
-              <MenuItem key={durationOption} value={durationOption}>
-                {durationOption} {durationOption > 1 ? "s" : ""}
-              </MenuItem>
-            ))}
-          </Select>
-          <FormHelperText>Select the time of your arrival.</FormHelperText>
-        </FormControl>
-        <FormControl fullWidth className="mb-4">
-          <FormLabel>Parking Duration (Hours)</FormLabel>
-          <Select
-            value={duration}
-            onChange={(e, newValue) => setDuration(newValue)}
-            label="Parking Duration (Hours)"
-            fullWidth
-          >
-            {[1, 2, 3, 4, 5].map((durationOption) => (
-              <MenuItem key={durationOption} value={durationOption}>
-                {durationOption} hour{durationOption > 1 ? "s" : ""}
-              </MenuItem>
-            ))}
-          </Select>
-          <FormHelperText>Select the duration of your parking.</FormHelperText>
-        </FormControl>
+            {feedback}
+          </Alert>
+        )}
 
-        {feedback && <Alert color={feedback.includes("🎉") ? "success" : "danger"}>{feedback}</Alert>}
-
-        <Button onClick={makeReservation} disabled={!user.id || !space || !reservationDate || !selectedTime || duration <= 0}>
+        {/* Confirmation Button */}
+        <Button
+          onClick={makeReservation}
+          disabled={user.id === 0 || space === 0 || !reservationDate}
+          className="mt-4"
+        >
           Confirm Reservation
         </Button>
       </CardContent>
