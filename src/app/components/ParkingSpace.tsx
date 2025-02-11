@@ -15,6 +15,7 @@ export type UserData = {
   name: string;
   email: string;
   password: null;
+  points: number;
 };
 
 const ParkingSpace: React.FC<ParkingSpaceProps> = ({ space }) => {
@@ -23,6 +24,7 @@ const ParkingSpace: React.FC<ParkingSpaceProps> = ({ space }) => {
     name: "",
     email: "",
     password: null,
+    points: 0,
   });
 
   const [feedback, setFeedback] = React.useState<string | null>(null);
