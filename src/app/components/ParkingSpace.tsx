@@ -1,5 +1,10 @@
 import React from "react";
-import { Button, Card, CardContent, Typography, Alert } from "@mui/joy";
+import { Button, Card, CardContent, Typography, Alert, FormControl } from "@mui/joy";
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import dayjs, { Dayjs } from "dayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { Input } from "@mui/joy";
 
 export type ParkingSpaceProps = {
   space: number;
@@ -20,27 +25,23 @@ const ParkingSpace: React.FC<ParkingSpaceProps> = ({ space }) => {
     password: null,
   });
 
-  const [feedback, setFeedback] = React.useState<string | null>(null); // For showing success or error messages
+  const [feedback, setFeedback] = React.useState<string | null>(null);
+  const [reservationDate, setReservationDate] = React.useState<Dayjs | null>(dayjs());
 
   const reservationRequestValid = (): string | null => {
-    if (user.id === 0) {
-      return "User not logged in! Please log in to proceed.";
-    }
-    if (space === 0) {
-      return "Parking space not chosen! Please select a space.";
-    }
+    if (user.id === 0) return "User not logged in! Please log in to proceed.";
+    if (space === 0) return "Parking space not chosen! Please select a space.";
+    if (!reservationDate) return "Please select a reservation date.";
     return null;
   };
 
   const makeReservation = async () => {
-    // Validate prerequisites
     const message = reservationRequestValid();
     if (message) {
-      setFeedback(message); // Show validation error
+      setFeedback(message);
       return;
     }
 
-    // Operate further
     try {
       const response = await fetch(process.env.SERVER_DOMAIN + "/reservation/create", {
         method: "POST",
@@ -50,6 +51,7 @@ const ParkingSpace: React.FC<ParkingSpaceProps> = ({ space }) => {
         body: JSON.stringify({
           userId: user.id,
           parkingSpaceId: space,
+          date: reservationDate.format("YYYY-MM-DD"),
         }),
         credentials: "include",
       });
@@ -117,6 +119,22 @@ const ParkingSpace: React.FC<ParkingSpaceProps> = ({ space }) => {
           {user.id !== 0 ? `${user.name} (${user.email})` : "Not logged in"}
         </Typography>
 
+        {/* Date Picker */}
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <FormControl className="mb-4">
+            <Typography level="body-sm" sx={{ mb: 0.5 }}>
+              <strong className="text-blue-800">Reservation Date:</strong>
+            </Typography>
+            <DatePicker
+              value={reservationDate}
+              onChange={(newDate) => setReservationDate(newDate)}
+              disablePast
+              shouldDisableDate={(date) => date.isAfter(dayjs().add(7, "day"))}
+              format="DD/MM/YYYY"
+            />
+          </FormControl>
+        </LocalizationProvider>
+
         {/* Feedback Message */}
         {feedback && (
           <Alert
@@ -131,7 +149,7 @@ const ParkingSpace: React.FC<ParkingSpaceProps> = ({ space }) => {
         {/* Confirmation Button */}
         <Button
           onClick={makeReservation}
-          disabled={user.id === 0 || space === 0}
+          disabled={user.id === 0 || space === 0 || !reservationDate}
           className="mt-4"
         >
           Confirm Reservation

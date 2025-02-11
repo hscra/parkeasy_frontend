@@ -4,6 +4,8 @@ import React, { useEffect, useState } from "react";
 import Detail from "../components/Detail";
 import Map from "../components/Map";
 import ParkingSpace from "../components/ParkingSpace";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
 export type Location = {
   id: number;
@@ -88,7 +90,9 @@ const Parking: React.FC = () => {
       {/* Bottom Section: Parking Space */}
       <div className="bg-white shadow-lg rounded-lg p-4">
         <h2 className="text-xl font-semibold mb-4 text-blue-600">Parking Space</h2>
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
         <ParkingSpace space={selectedSpace} />
+        </LocalizationProvider>
       </div>
     </div>
   );

@@ -18,7 +18,6 @@ export default function ElevateAppBar(props: Props) {
   return (
     <React.Fragment>
       <CssBaseline />
-      {/* <ElevationScroll {...props}> */}
         <AppBar>
           <Toolbar>
             <Box display="flex" alignItems="center" width="100%">
@@ -28,7 +27,6 @@ export default function ElevateAppBar(props: Props) {
             </Box>
           </Toolbar>
         </AppBar>
-      {/* </ElevationScroll> */}
       <Toolbar />
     </React.Fragment>
   );
