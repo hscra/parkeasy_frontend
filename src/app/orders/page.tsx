@@ -127,9 +127,7 @@ const Orders: React.FC = () => {
         throw new Error("Network response was not ok");
       }
 
-
       const data = await response.json();
-      console.log(data)
 
       setUserHistoricalReservations(
         data.map((el: any) => ({
