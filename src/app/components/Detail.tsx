@@ -68,7 +68,7 @@ const Detail: React.FC<ParkingDetailsProps> = ({id_location, selectSpace}) => {
             </tr>
           </thead>
           <tbody>
-            {parkingSpaces.map((ps) => (
+            {parkingSpaces.slice(0, 20).map((ps) => (
               <DetailParkingSpaceRow
                 key={ps.id}
                 id={ps.id}
