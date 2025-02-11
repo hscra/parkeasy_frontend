@@ -37,6 +37,18 @@ const ParkingSpace: React.FC<ParkingSpaceProps> = ({ space }) => {
     return null;
   };
 
+  const formatStartOfDay = (dateString: string) => {
+    const date = new Date(dateString);
+    date.setHours(1, 0, 0, 0);
+    return date.toISOString().slice(0, 19);
+  }
+
+  const formatEndOfDay = (dateString: string) => {
+    const date = new Date(dateString);
+    date.setHours(24, 59, 59, 999);
+    return date.toISOString().slice(0, 19);
+  }
+
   const makeReservation = async () => {
     const message = reservationRequestValid();
     if (message) {
@@ -53,7 +65,8 @@ const ParkingSpace: React.FC<ParkingSpaceProps> = ({ space }) => {
         body: JSON.stringify({
           userId: user.id,
           parkingSpaceId: space,
-          date: reservationDate?.format("YYYY-MM-DD"),
+          startTime: reservationDate ? formatStartOfDay(reservationDate.toISOString()) : "",
+          endTime: reservationDate ? formatEndOfDay(reservationDate.toISOString()) : "",
         }),
         credentials: "include",
       });

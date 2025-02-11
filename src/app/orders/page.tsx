@@ -254,8 +254,8 @@ const Orders: React.FC = () => {
                     className="flex-row justify-center items-center bg-gray-200 p-8 mb-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 focus:outline-none"
                   >
                     <p className="text-2xl mb-4 text-center">
-                      <strong className="text-blue-400">Start Time:&nbsp;</strong> {reservation.startTime}
-                      <strong className="text-blue-400">&nbsp;End Time:&nbsp;</strong> {reservation.endTime}
+                      <strong className="text-blue-400">Start Time:</strong> {reservation.startTime}
+                      <strong className="text-blue-400">&nbsp;End Time:</strong> {reservation.endTime}
                     </p>
                     <p className="text-2xl mb-4 text-center">
                       <strong className="text-blue-500">Place:</strong> {reservation.place}
