@@ -14,6 +14,7 @@ export type Reservation = {
   startTime: string;
   place: string;
   paymentStatus: number;
+  points: number;
   position: Position;
 };
 
@@ -91,7 +92,6 @@ const Orders: React.FC = () => {
         throw new Error("Network response was not ok");
       }
       const data = await response.json();
-      console.log("reservations", data);
 
       setUserReservations(
         data.map((el: any) => ({
@@ -101,6 +101,7 @@ const Orders: React.FC = () => {
           startTime: el.startTime,
           place: el.place,
           paymentStatus: el.paymentStatus,
+          points: el.points,
           position: {
             lat: el.lat,
             lng: el.lng,
@@ -120,7 +121,7 @@ const Orders: React.FC = () => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        amount: 1000,
+        amount: (userReservations.find(r => r.id === id)?.points ?? 100) * 100,
         quantity: 1,
         name: `Parking Reservation ${id}`,
         currency: "PLN",
@@ -149,6 +150,32 @@ const Orders: React.FC = () => {
 
   const cancelReservation = async (id: number) => {
     console.log("Cancel reservation", id);
+    fetch(process.env.SERVER_DOMAIN + "/reservation/delete?Id=" + id, {
+      method: 'DELETE',
+      credentials: 'include'
+    })
+      .then(async response => {
+        if (!response.ok) {
+          return response.text().then(text => { throw new Error(text) })
+        }
+
+        let oldReservations = userReservations;
+        oldReservations = oldReservations.map((el) => {
+          if (el.id === id) {
+            el.paymentStatus = 0;
+          }
+          return el;
+        });
+
+        setUserReservations(oldReservations);
+        getUserReservations(user.id);
+
+        window.alert("Reservation cancelled successfully!");
+      })
+      .catch((error) => {
+        alert("Cancelling reservation failed! Please try again." + error);
+      }
+    )
   };
 
   useEffect(() => {
@@ -170,29 +197,29 @@ const Orders: React.FC = () => {
   };
 
   // Mock data for reservation history (Past reservations)
-  const reservationHistory: Reservation[] = [
-    {
-      id: 4,
-      time: "2024-12-15 18:30",
-      place: "Eastside Parking",
-      paymentStatus: "Awaiting Payment",
-      position: { lat: 48.8566, lng: 2.3522 }, // Example coordinates (Paris)
-    },
-    {
-      id: 5,
-      time: "2024-11-05 13:00",
-      place: "Westfield Mall Parking",
-      paymentStatus: "Paid",
-      position: { lat: 37.7749, lng: -122.4194 }, // Example coordinates (San Francisco)
-    },
-    {
-      id: 6,
-      time: "2024-09-10 11:45",
-      place: "Airport Parking",
-      paymentStatus: "Awaiting Payment",
-      position: { lat: 52.5200, lng: 13.4050 }, // Example coordinates (Berlin)
-    },
-  ];
+  // const reservationHistory: Reservation[] = [
+  //   {
+  //     id: 4,
+  //     time: "2024-12-15 18:30",
+  //     place: "Eastside Parking",
+  //     paymentStatus: "Awaiting Payment",
+  //     position: { lat: 48.8566, lng: 2.3522 }, // Example coordinates (Paris)
+  //   },
+  //   {
+  //     id: 5,
+  //     time: "2024-11-05 13:00",
+  //     place: "Westfield Mall Parking",
+  //     paymentStatus: "Paid",
+  //     position: { lat: 37.7749, lng: -122.4194 }, // Example coordinates (San Francisco)
+  //   },
+  //   {
+  //     id: 6,
+  //     time: "2024-09-10 11:45",
+  //     place: "Airport Parking",
+  //     paymentStatus: "Awaiting Payment",
+  //     position: { lat: 52.5200, lng: 13.4050 }, // Example coordinates (Berlin)
+  //   },
+  // ];
 
   // State to track the selected reservation location
 
