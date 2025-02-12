@@ -258,9 +258,6 @@ const Orders: React.FC = () => {
                       <strong className="text-blue-400">&nbsp;End Time:</strong> {reservation.endTime}
                     </p>
                     <p className="text-2xl mb-4 text-center">
-                      <strong className="text-blue-500">Place:</strong> {reservation.place}
-                    </p>
-                    <p className="text-2xl mb-4 text-center">
                       <strong className="text-blue-500">Parking Space:</strong> {reservation.parkingSpaceId}
                     </p>
                     <p className="text-2xl mb-4 text-center">
@@ -294,7 +291,6 @@ const Orders: React.FC = () => {
               <tr className="bg-gray-100">
                 <th className="py-2 px-4 text-left text-lg font-medium text-gray-700">Start Time</th>
                 <th className="py-2 px-4 text-left text-lg font-medium text-gray-700">End Time</th>
-                <th className="py-2 px-4 text-left text-lg font-medium text-gray-700">Place</th>
                 <th className="py-2 px-4 text-left text-lg font-medium text-gray-700">Parking Space</th>
                 <th className="py-2 px-4 text-left text-lg font-medium text-gray-700">Payment Status</th>
               </tr>
@@ -304,7 +300,6 @@ const Orders: React.FC = () => {
                 <tr key={reservation.id} className="border-b">
                   <td className="py-4 px-4 text-lg text-gray-700">{reservation.startTime}</td>
                   <td className="py-4 px-4 text-lg text-gray-700">{reservation.endTime}</td>
-                  <td className="py-4 px-4 text-lg text-gray-700">{reservation.place}</td>
                   <td className="py-4 px-4 text-lg text-gray-700">{reservation.parkingSpaceId}</td>
                   <td className="py-4 px-4 text-lg text-gray-700">{reservation.paymentStatus === 1 ? "Paid" : "Failed"}</td>
                 </tr>
