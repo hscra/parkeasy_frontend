@@ -1,6 +1,6 @@
 # ParkEasy frontend development
 
-\n
+\
 This is a branch of master `park-easy-frontend` to implement parking history for one user.
 User infroamtion can be fetched from database , reservations are informed by REST API.
 
@@ -17,6 +17,7 @@ The src is intended to match the functional requirements such as displaying rese
 
 ### Example of rendering
 
-1. First required user login ![alt text](image.png)
+1. First required user login\
+   ![alt text](image.png)
 2. Rendering the user information with reservation history.
    ![alt text](image-1.png)
