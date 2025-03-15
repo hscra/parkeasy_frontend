@@ -1,9 +1,11 @@
+# ParkEasy frontend development
+
+\n
 This is a branch of master `park-easy-frontend` to implement parking history for one user.
 User infroamtion can be fetched from database , reservations are informed by REST API.
 
 ### Flow of logic
 
-!!UWAGA!!
 The src is intended to match the functional requirements such as displaying reservation history(including reservation ID, parkingSpaceID) with user inforamtion (user name, email address).
 
 1. It should implement `server` and `client` componets
