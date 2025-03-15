@@ -21,3 +21,7 @@ The src is intended to match the functional requirements such as displaying rese
    ![alt text](image.png)
 2. Rendering the user information with reservation history.
    ![alt text](image-1.png)
+
+### Technology
+
+- Typescript in Next.js framework
